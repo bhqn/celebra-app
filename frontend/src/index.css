@@ -1,0 +1,58 @@
+/* RESET BÁSICO */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+
+}
+
+/* ROOT DO REACT */
+#root {
+  width: 100%;
+  min-height: 100vh;
+
+}
+
+/* TIPOGRAFIA PADRÃO */
+body {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #FFFF; 
+  color: #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* RESET DE ELEMENTOS */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* IMAGENS */
+img {
+  max-width: 100%;
+  display: block;
+}

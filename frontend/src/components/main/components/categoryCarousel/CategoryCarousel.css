@@ -1,0 +1,101 @@
+.carousel {
+  width: 100%;
+  margin: 18px 0 26px;
+}
+
+.carousel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 10px;
+}
+
+.carousel__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
+/* wrapper para posicionar botões flutuantes */
+.carousel__wrap {
+  position: relative;
+}
+
+/* trilha com scroll horizontal */
+.carousel__track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 6px 40px; 
+  scroll-snap-type: x mandatory;
+   scrollbar-width: none;      
+  -ms-overflow-style: none;  
+}
+
+
+.carousel__track > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+
+.carousel__track::-webkit-scrollbar {
+  height: 8px;
+}
+.carousel__track::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+}
+
+/* botões flutuantes */
+.carousel__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 36px;
+  height: 64px;
+  border-radius: 999px;
+
+  display: flex;              
+  align-items: center;        
+  justify-content: center;    
+
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+
+  font-size: 28px;            
+  line-height: 1;             
+  font-weight: 700;
+  color: #333;
+
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  z-index: 10;
+}
+.carousel__nav:hover {
+  transform: translateY(-50%) scale(1.04);
+}
+
+.carousel__nav--left {
+  left: 6px;
+}
+
+.carousel__nav--right {
+  right: 6px;
+}
+
+/* opcional: em telas pequenas, deixar botões um pouco menores */
+@media (max-width: 480px) {
+  .carousel__track {
+    padding: 6px 34px;
+  }
+  .carousel__nav {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+}

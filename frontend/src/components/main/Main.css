@@ -1,0 +1,14 @@
+.main{
+    padding: 30px;
+  
+}
+
+.main__title{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.main__container{
+    gap:10px;
+    display: flex; 
+}

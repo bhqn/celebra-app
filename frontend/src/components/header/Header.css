@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  align-items: center;           /* centraliza verticalmente */
+  justify-content: space-between;/* separa esquerda/direita */
+  background: linear-gradient(
+    180deg,
+    #E84747 0%,
+    #db4141 100%
+  );
+  width: 100%;
+  height: 72px;
+  padding: 0 30px;               /* padding lateral elegante */
+}
+
+/* LOGO */
+.logo {
+  height: 52px;
+}
+
+/* MENU */
+.menu {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* BOTÃO */
+.menu__btn {
+  padding: 8px 16px;
+  
+  color: #ffff;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.menu__btn:hover {
+color: rgb(253, 207, 151);
+  transform: translateY(-1px);
+}
+
+/* Active */
+.menu__btn:active {
+  transform: translateY(0);
+}

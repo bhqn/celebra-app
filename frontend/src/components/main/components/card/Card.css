@@ -1,0 +1,69 @@
+.card {
+  width: 350px;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  padding: 10px;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* IMAGEM */
+.card__image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* CONTEÚDO */
+.card__info {
+  padding: 14px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* TÍTULO */
+.card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* LOJA */
+.card__store {
+  font-size: 13px;
+  color: #777;
+}
+
+/* REVIEWS */
+.card__reviews {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card__review_num {
+  font-size: 14px;
+  font-weight: 700;
+  color: #444;
+}
+
+.card__reviews img {
+  width: 16px;
+  height: 16px;
+}
+
+/* PREÇO */
+.card__price {
+  margin-top: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #E84747;
+}
