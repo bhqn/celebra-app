@@ -11,7 +11,10 @@ import "./components/Stepper/Stepper.css";
 export default function Main() {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const next = () => setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
+  const next = () => {
+    console.log("Avançando do step", currentStep);
+    setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
+  };
 
   const back = () => setCurrentStep((s) => Math.max(s - 1, 0));
 
@@ -33,19 +36,26 @@ export default function Main() {
     <div className="main__wizard">
       <Stepper steps={steps} currentStep={currentStep} />
 
-      <div className="main__content">{steps[currentStep].element}</div>
+      <div className="main__content">
+        {steps[currentStep].element}
+      </div>
 
       <div className="main__actions">
         {currentStep !== 0 && (
-          <button className="main__back_btn" onClick={back}>
+          <button
+            className="main__back_btn"
+            type="button"
+            onClick={back}
+          >
             Voltar
           </button>
         )}
 
         <button
           className="main__next_btn"
-          type="submit"
-          form="info-form"
+          type={currentStep === 0 ? "submit" : "button"}
+          form={currentStep === 0 ? "info-form" : undefined}
+          onClick={currentStep !== 0 ? next : undefined}
           disabled={currentStep === steps.length - 1}
         >
           Próximo

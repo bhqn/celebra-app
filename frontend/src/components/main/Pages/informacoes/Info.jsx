@@ -32,7 +32,8 @@ function Info({ next }) {
 
   function onSubmit(data) {
     console.log("Dados do formulário:", data);
-    next();
+        next(); 
+    
   }
 
   return (
