@@ -1,0 +1,109 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Container da página */
+.info {
+  margin-top: 30px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+/* Card */
+.info__form {
+  width: 100%;
+  max-width: 360px;
+  padding: 28px 24px 32px;
+  background: #fff;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Textos */
+.info__form p {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  margin-top: 12px;
+}
+
+/* Inputs gerais */
+.info__form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: none;
+  background: #f3f5f9;
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.info__form input:focus {
+  background: #eef1f7;
+  box-shadow: 0 0 0 2px rgba(240, 90, 34, 0.2);
+}
+
+/* Área de horário */
+.info__time {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+/* Botão localização */
+.info__btn_location {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #9aa0a6;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+
+.info__btn_location:hover {
+  color: #E84747 ;
+}
+
+/* Range (slider) */
+.info__form input[type="range"] {
+  padding: 0;
+  margin-top: 8px;
+  accent-color: #E84747 ;
+}
+
+/* Melhor aparência do slider (WebKit) */
+.info__form input[type="range"]::-webkit-slider-thumb {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: #E84747 ;
+  cursor: pointer;
+}
+
+.info__time_input{
+      position: relative;
+
+}
+.info__time_input::after {
+background-color: red;
+}
+
+/* Responsivo */
+@media (max-width: 400px) {
+  .info__form {
+    border-radius: 0;
+    min-height: 100vh;
+    justify-content: center;
+  }
+}

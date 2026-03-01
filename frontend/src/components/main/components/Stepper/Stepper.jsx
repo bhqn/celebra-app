@@ -13,7 +13,11 @@ export default function Stepper({ steps, currentStep }) {
               <div className={`stepper__circle stepper__circle--${state}`}>
                 {state === "done" ? "✓" : ""}
               </div>
-              <div className={`stepper__label stepper__label--${state}`}>
+               <div
+                className={`stepper__label stepper__label--${state} ${
+                  s.customClass ? s.customClass : ""
+                }`}
+              >
                 {s.label}
               </div>
 

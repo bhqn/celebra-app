@@ -12,3 +12,46 @@
     gap:10px;
     display: flex; 
 }
+
+.main__wizard{
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.main__actions {
+  display: flex;          /* ativa o flex */
+  align-items: center;    /* alinha verticalmente */
+  justify-content: center; /* opcional: centraliza horizontalmente */
+  gap: 10px;              /* opcional: espaço entre itens */
+}
+
+.main__next_btn {
+  background: linear-gradient(180deg, #E84747 0%, #db4141 100%);  
+  color: white;            
+  border: none;            
+  padding: 10px 20px;    
+  border-radius: 5px;   
+  font-size: 16px;        
+  cursor: pointer;         
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+.main__next_btn:hover {
+  background-color: darkred; 
+}
+
+.main__back_btn {
+  background: linear-gradient(180deg, #dedede 0%, #f9f9f9 100%);
+  color: rgb(41, 41, 41);          
+  border: none;           
+  padding: 10px 20px;     
+  border-radius: 5px;      
+  font-size: 16px;        
+  cursor: pointer;         
+  transition: background-color 0.3s ease; 
+}
+
+.main__back_btn:hover {
+  background-color: rgb(216, 216, 216); 
+}

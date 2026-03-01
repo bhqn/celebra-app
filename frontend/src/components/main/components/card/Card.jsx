@@ -1,20 +1,21 @@
 import "./Card.css"
-import image from "../../../../assets/salgado.png"
-import star from "../../../../assets/star.svg"
 
-function Card (){
+import star from "../../../../assets/star.svg"
+import comida from "../../../../utils/models/comida"
+
+function Card ({nome, foto, preco, avaliacao, loja}){
     return(
         <div className="card">
             
-            <img src={image} className="card__image"/>
+            <img src={foto} className="card__image"/>
             <div className="card__info">
-            <p className="card__title"> Cento de Salgados</p>
-            <p className="card__store"> Salgados S.A</p>
+            <p className="card__title"> {nome}</p>
+            <p className="card__store"> {loja}</p>
             <div className="card__reviews">
-            <p className="card__review_num"> 4.5</p>
+            <p className="card__review_num"> {avaliacao}</p>
             <img src={star}/>
             </div>
-            <p className="card__price"> R$60,00</p>
+            <p className="card__price"> {preco}</p>
             </div>
         </div>
     )

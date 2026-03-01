@@ -4,10 +4,11 @@
 }
 
 .stepper__track {
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  
 }
 
 .stepper__item {
@@ -17,8 +18,8 @@
 }
 
 .stepper__circle {
-  width: 18px;
-  height: 18px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   border: 2px solid #ddd;
   background: #fff;
@@ -26,6 +27,7 @@
   place-items: center;
   font-size: 12px;
   font-weight: 700;
+  
 }
 
 .stepper__circle--todo {
@@ -34,22 +36,24 @@
 }
 
 .stepper__circle--active {
-  border-color: #ff6a00;
+  border-color: #db4141;
   background: #fff;
 }
 
 .stepper__circle--done {
-  border-color: #ff6a00;
-  background: #ff6a00;
+  border-color: #db4141;
+  background: linear-gradient(180deg, #E84747 0%, #db4141 100%);  
   color: #fff;
 }
 
 .stepper__label {
+  margin-left: 1px;
   position: absolute;
-  top: 28px;
-  left: 10%;
+  top: 40px;
+  left: 15%;
   transform: translateX(-50%);
-  font-size: 11px;
+  font-size: 14px;
+  font-weight: 600;
   color: #888;
   white-space: nowrap;
 }
@@ -60,12 +64,17 @@
 }
 
 .stepper__line {
-  width: 60px;
+  width: 90px;
   height: 2px;
   background: #e6e6e6;
   margin: 0 10px;
 }
 
 .stepper__line--done {
-  background: #ff6a00;
+  background: linear-gradient(180deg, #E84747 0%, #db4141 100%);  
 }
+
+.stepper__label--ajustado{
+  margin-left: 10px
+}
+

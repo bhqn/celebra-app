@@ -1,11 +1,11 @@
 
 import CategoryCarousel from "../../components/CategoryCarousel/CategoryCarousel"
 import Card from "../../components/card/Card"
-import comida from "../../../../utils/models/comida"
-function Food() {
+import estrutura from "../../../../utils/models/estruturas"
+function Struct() {
   return (
     <>
-      {comida.map((categoria) => (
+      {estrutura.map((categoria) => (
         <CategoryCarousel
           key={categoria.categoria}
           title={categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1)}
@@ -26,4 +26,4 @@ function Food() {
   )
 }
 
-export default Food
+export default Struct
