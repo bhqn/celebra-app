@@ -2,7 +2,7 @@
 import CategoryCarousel from "../../components/CategoryCarousel/CategoryCarousel"
 import Card from "../../components/card/Card"
 import fun from "../../../../utils/models/entreterimento"
-function Fun() {
+function Fun({ onOpen }) {
   return (
     <>
       {fun.map((categoria) => (
@@ -18,6 +18,7 @@ function Fun() {
               preco={item.preco}
               avaliacao={item.avaliacao}
               loja={item.loja}
+              onOpen={onOpen}
             />
           ))}
         </CategoryCarousel>

@@ -1,0 +1,90 @@
+.modal__content {
+  display: flex;
+  gap: 30px;
+  max-width: 700px;
+  width: 100%;
+  align-items: stretch; /* 🔥 isso resolve a altura */
+}
+
+/* COLUNA ESQUERDA */
+.modal__warp_one {
+  width: 300px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* IMAGEM */
+.modal__image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* INFO ABAIXO DA IMAGEM */
+.modal__wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal__store {
+  font-size: 15px;
+  color: #666;
+}
+
+.modal__review {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.modal__rate {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.modal__price {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* COLUNA DIREITA */
+.modal_wrap_two {
+  flex: 1; /* 🔥 ocupa toda a altura disponível */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* TEXTO */
+.modal__title {
+  font-size: 22px;
+  font-weight: 600;
+}
+.modal__title-desc{
+    margin-top: 30px;
+}
+
+.modal__description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+}
+
+/* BOTÃO */
+.modal__btn {
+  background: linear-gradient(180deg, #E84747 0%, #db4141 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end; /* botão fica no canto inferior */
+}

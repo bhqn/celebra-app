@@ -2,7 +2,7 @@
 import CategoryCarousel from "../../components/CategoryCarousel/CategoryCarousel"
 import Card from "../../components/card/Card"
 import bebidas from "../../../../utils/models/bebidas";
-function Drinks() {
+function Drinks({ onOpen }) {
   return (
     <>
       {bebidas.map((categoria) => (
@@ -18,6 +18,7 @@ function Drinks() {
               preco={item.preco}
               avaliacao={item.avaliacao}
               loja={item.loja}
+              onOpen={onOpen}
             />
           ))}
         </CategoryCarousel>

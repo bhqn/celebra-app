@@ -2,7 +2,7 @@
 import CategoryCarousel from "../../components/CategoryCarousel/CategoryCarousel"
 import Card from "../../components/card/Card"
 import estrutura from "../../../../utils/models/estruturas"
-function Struct() {
+function Struct( {onOpen}) {
   return (
     <>
       {estrutura.map((categoria) => (
@@ -18,6 +18,7 @@ function Struct() {
               preco={item.preco}
               avaliacao={item.avaliacao}
               loja={item.loja}
+              onOpen={onOpen}
             />
           ))}
         </CategoryCarousel>

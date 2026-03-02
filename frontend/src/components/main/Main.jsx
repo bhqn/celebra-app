@@ -8,7 +8,7 @@ import Info from "./Pages/informacoes/Info";
 import "./Main.css";
 import "./components/Stepper/Stepper.css";
 
-export default function Main() {
+export default function Main({ onOpen }) {
   const [currentStep, setCurrentStep] = useState(0);
 
   const next = () => {
@@ -20,10 +20,10 @@ export default function Main() {
 
   const steps = [
     { key: "info", label: "Informações", element: <Info next={next} /> },
-    { key: "food", label: "Comidas", element: <Food /> },
-    { key: "drink", label: "Bebidas", element: <Drinks /> },
-    { key: "struct", label: "Estrutura", element: <Struct /> },
-    { key: "fun", label: "Entretenimento", element: <Fun /> },
+    { key: "food", label: "Comidas", element: <Food onOpen={onOpen} /> },
+    { key: "drink", label: "Bebidas", element: <Drinks onOpen={onOpen} /> },
+    { key: "struct", label: "Estrutura", element: <Struct onOpen={onOpen} /> },
+    { key: "fun", label: "Entretenimento", element: <Fun onOpen={onOpen} /> },
     {
       key: "pay",
       label: "Pagamento",

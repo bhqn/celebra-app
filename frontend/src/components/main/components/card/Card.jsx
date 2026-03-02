@@ -1,11 +1,11 @@
 import "./Card.css"
-
 import star from "../../../../assets/star.svg"
-import comida from "../../../../utils/models/comida"
 
-function Card ({nome, foto, preco, avaliacao, loja}){
+
+function Card ({nome, foto, preco, avaliacao, loja, onOpen}){
+    
     return(
-        <div className="card">
+        <div className="card" onClick={() => onOpen({ nome, foto, preco, avaliacao, loja })}>
             
             <img src={foto} className="card__image"/>
             <div className="card__info">
