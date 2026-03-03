@@ -32,13 +32,16 @@ function Info({ next }) {
 
   function onSubmit(data) {
     console.log("Dados do formulário:", data);
-        next(); 
-    
+    next();
   }
 
   return (
     <div className="info">
-      <form id="info-form" className="info__form" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        id="info-form"
+        className="info__form"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <p>Quando será o evento?</p>
         <input
           type="date"
@@ -55,6 +58,13 @@ function Info({ next }) {
           <p>Previsão (horas)</p>
           <input className="info__time_input" type="number" min="1" max="10" />
         </div>
+
+        <p>Qual tipo de evento?</p>
+        <input
+          placeholder="Aniversario, Casamento, etc..."
+          type="text"
+          {...register("TipoDeEvento", { required: true })}
+        />
 
         <p>Onde será o evento?</p>
         <input
