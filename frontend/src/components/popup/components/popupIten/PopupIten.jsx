@@ -1,5 +1,5 @@
-import Star from "../../../assets/star.svg";
-import "./PopupContent.css";
+import Star from "../../../../assets/star.svg";
+import "./PopupIten.css"
 export default function PopupContent({ nome, foto, preco, avaliacao, loja }) {
   return (
     <div className="modal__content">
