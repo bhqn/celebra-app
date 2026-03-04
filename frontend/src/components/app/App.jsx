@@ -12,6 +12,11 @@ function App() {
   // estado: ui
   const [isOpen, setIsOpen] = useState(false);
 
+  const openCart = () => {
+  setSelectedItem(null);
+  setIsOpen(true);
+};
+
   const openPopup = (item) => {
     setSelectedItem(item);
     setIsOpen(true);
@@ -30,12 +35,12 @@ function App() {
 
   return (
     <>
-      <Header onOpen={openPopup} />
+      <Header onOpen={openPopup} onOpenCart={openCart}/>
       <Main onOpen={openPopup} />
       {isOpen && (
   <Popup onClose={closePopup}>
     {selectedItem ? (
-      <PopupIten {...selectedItem} />
+      <PopupIten {...selectedItem} onClose={closePopup} />
     ) : (
       <Cart /> // carrinho vazio
     )}

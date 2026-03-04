@@ -12,6 +12,7 @@ function Drinks({ onOpen }) {
         >
           {categoria.itens.map((item, index) => (
             <Card
+            id={item.id}
               key={index}
               nome={item.nome}
               foto={item.foto}
