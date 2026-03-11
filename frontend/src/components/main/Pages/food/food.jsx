@@ -22,6 +22,8 @@ function Food({ onOpen }) {
                 loja={item.loja}
                 descricao={item.descricao}
                 sabores={item.sabores}
+                categoria={categoria.categoria}
+                subcategoria={sub.nome}
                 onOpen={onOpen}
               />
             ))}

@@ -12,6 +12,8 @@ export default function PopupContent({
   loja,
   descricao,
   sabores,
+  categoria,
+  subcategoria,
   onClose,
 }) {
   const { addToCart } = useCart();
@@ -74,6 +76,8 @@ export default function PopupContent({
       loja,
       sabores: saboresSelecionados,
       quantidade,
+      categoria,
+      subcategoria,
     });
 
     onClose();
@@ -102,45 +106,44 @@ export default function PopupContent({
           <p className="modal__title modal__title-desc">Descrição</p>
 
           <p className="modal__description">{descricao}</p>
-          
 
-        {sabores?.length > 0 && (
-  <>
-    <div className="modal__flavors_header">
-      <p>Escolha os sabores</p>
-      <span>
-        {totalSelecionado}/{LIMITE_SABORES}
-      </span>
-    </div>
-
-    <div className="modal__flavors">
-      {sabores.map((sabor) => {
-        const quantidade = saboresSelecionados[sabor] || 0;
-
-        return (
-          <div key={sabor} className="modal__flavor_row">
-            <span>{sabor}</span>
-
-            {quantidade === 0 ? (
-              <button
-                className="flavor_add"
-                onClick={() => addSabor(sabor)}
-              >
-                +
-              </button>
-            ) : (
-              <div className="flavor_counter">
-                <button onClick={() => removeSabor(sabor)}>-</button>
-                <span>{quantidade}</span>
-                <button onClick={() => addSabor(sabor)}>+</button>
+          {sabores?.length > 0 && (
+            <>
+              <div className="modal__flavors_header">
+                <p>Escolha os sabores</p>
+                <span>
+                  {totalSelecionado}/{LIMITE_SABORES}
+                </span>
               </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </>
-)}
+
+              <div className="modal__flavors">
+                {sabores.map((sabor) => {
+                  const quantidade = saboresSelecionados[sabor] || 0;
+
+                  return (
+                    <div key={sabor} className="modal__flavor_row">
+                      <span>{sabor}</span>
+
+                      {quantidade === 0 ? (
+                        <button
+                          className="flavor_add"
+                          onClick={() => addSabor(sabor)}
+                        >
+                          +
+                        </button>
+                      ) : (
+                        <div className="flavor_counter">
+                          <button onClick={() => removeSabor(sabor)}>-</button>
+                          <span>{quantidade}</span>
+                          <button onClick={() => addSabor(sabor)}>+</button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="modal__actions">

@@ -2,13 +2,13 @@ import "./Card.css"
 import star from "../../../../assets/star.svg"
 
 function Card ({ id, nome, foto, preco, avaliacao, loja, descricao,
-    sabores, onOpen }){
+    sabores,categoria, subcategoria, onOpen }){
 
     return(
         <div
           className="card"
           onClick={() => onOpen({ id, nome, foto, preco, avaliacao, loja, descricao,
-    sabores })}
+    sabores, categoria, subcategoria })}
         >
             <img src={foto} className="card__image"/>
 

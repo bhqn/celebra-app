@@ -1,10 +1,11 @@
 const bebidas = [
   {
-    categoria: "não alcoólicas",
+    categoria: "Bebidas",
+    subcategoria: "Não alcoólicas",
     itens: [
       {
         id: 19,
-        nome: "Coca-Cola 2l",
+        nome: "Coca-Cola 2L",
         foto: "https://cdn.awsli.com.br/600x1000/1957/1957771/produto/1047697460688b682cc.jpg",
         preco: "R$8,00",
         avaliacao: 4.7,
@@ -12,7 +13,7 @@ const bebidas = [
       },
       {
         id: 20,
-        nome: "Fanta Uva 2l",
+        nome: "Fanta Uva 2L",
         foto: "https://bretas.vtexassets.com/arquivos/ids/203616/65730d44dddb07d995cdb7fb.jpg?v=638376356557430000",
         preco: "R$7,50",
         avaliacao: 4.5,
@@ -20,7 +21,7 @@ const bebidas = [
       },
       {
         id: 21,
-        nome: "Fanta Laranja 2l",
+        nome: "Fanta Laranja 2L",
         foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1cUMOJ3JgubNyre0cPYZNqseQ4Ussnn8iJQ&s",
         preco: "R$7,50",
         avaliacao: 4.6,
@@ -28,7 +29,7 @@ const bebidas = [
       },
       {
         id: 22,
-        nome: "Sprite 2l",
+        nome: "Sprite 2L",
         foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9RyX_UlM2wvDC3YvuohMH2vtFiMFj574v5A&s",
         preco: "R$7,00",
         avaliacao: 4.4,
@@ -45,7 +46,8 @@ const bebidas = [
     ]
   },
   {
-    categoria: "alcoólicas",
+    categoria: "Bebidas",
+    subcategoria: "Alcoólicas",
     itens: [
       {
         id: 24,

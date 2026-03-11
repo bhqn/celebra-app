@@ -11,6 +11,23 @@ function Cart() {
     totalPrice,
   } = useCart();
 
+  const itemsPorCategoria = items.reduce((acc, item) => {
+    const categoria = item.categoria || "Outros";
+    const sub = item.subcategoria || "";
+
+    if (!acc[categoria]) {
+      acc[categoria] = {};
+    }
+
+    if (!acc[categoria][sub]) {
+      acc[categoria][sub] = [];
+    }
+
+    acc[categoria][sub].push(item);
+
+    return acc;
+  }, {});
+
   const formatBRL = (value) =>
     value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
@@ -24,60 +41,71 @@ function Cart() {
         <>
           <p>Itens: {totalItems}</p>
 
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {items.map((item, index) => (
-              <li
-                key={index}
+{Object.entries(itemsPorCategoria).map(([categoria, subs]) => (
+  <div key={categoria} style={{ marginBottom: 20 }}>
+    <h3 style={{ marginBottom: 10 }}>{categoria}</h3>
+
+    {Object.entries(subs).map(([subcategoria, categoriaItems]) => (
+      <div key={subcategoria} style={{ marginLeft: 12, marginBottom: 8 }}>
+        {subcategoria && (
+          <h4 style={{ margin: "4px 0", fontWeight: 600 }}>{subcategoria}</h4>
+        )}
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {categoriaItems.map((item, index) => (
+            <li
+              key={index}
+              style={{
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+                padding: "10px 0",
+                borderBottom: "1px solid #eee",
+              }}
+            >
+              <img
+                src={item.foto}
+                alt={item.nome}
                 style={{
-                  display: "flex",
-                  gap: 12,
-                  alignItems: "center",
-                  padding: "10px 0",
-                  borderBottom: "1px solid #eee",
+                  width: 56,
+                  height: 56,
+                  objectFit: "cover",
+                  borderRadius: 10,
                 }}
-              >
-                <img
-                  src={item.foto}
-                  alt={item.nome}
-                  style={{
-                    width: 56,
-                    height: 56,
-                    objectFit: "cover",
-                    borderRadius: 10,
-                  }}
-                />
+              />
 
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: 0, fontWeight: 700 }}>{item.nome}</p>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontWeight: 700 }}>{item.nome}</p>
 
-                  <p style={{ margin: 0, fontSize: 12 }}>{item.loja}</p>
+                <p style={{ margin: 0, fontSize: 12 }}>{item.loja}</p>
 
-                  <p style={{ margin: 0, fontSize: 12 }}>{item.preco}</p>
+                <p style={{ margin: 0, fontSize: 12 }}>{item.preco}</p>
 
-                  {item.sabores && (
-                    <p style={{ margin: 0, fontSize: 12 }}>
-                      Sabores:{" "}
-                      {Object.entries(item.sabores)
-                        .map(([sabor, qtd]) => `${sabor} (${qtd})`)
-                        .join(", ")}
-                    </p>
-                  )}
-                </div>
+                {item.sabores && (
+                  <p style={{ margin: 0, fontSize: 12 }}>
+                    Sabores:{" "}
+                    {Object.entries(item.sabores)
+                      .map(([sabor, qtd]) => `${sabor} (${qtd})`)
+                      .join(", ")}
+                  </p>
+                )}
+              </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <button onClick={() => decreaseQty(index)}>-</button>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <button onClick={() => decreaseQty(index)}>-</button>
 
-                  <span>{item.qty}</span>
+                <span>{item.qty}</span>
 
-                  <button onClick={() => increaseQty(index)}>+</button>
-                </div>
+                <button onClick={() => increaseQty(index)}>+</button>
+              </div>
 
-                <button onClick={() => removeFromCart(item.id)}>
-                  Remover
-                </button>
-              </li>
-            ))}
-          </ul>
+              <button onClick={() => removeFromCart(index)}>Remover</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+))}
 
           <div
             style={{

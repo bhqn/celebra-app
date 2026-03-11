@@ -5,20 +5,21 @@ import estrutura from "../../../../utils/models/estruturas"
 function Struct( {onOpen}) {
   return (
     <>
-      {estrutura.map((categoria) => (
+      {estrutura.map((categoria, idx) => (
         <CategoryCarousel
-          key={categoria.categoria}
+          key={`${categoria.categoria}-${idx}`}
           title={categoria.categoria.charAt(0).toUpperCase() + categoria.categoria.slice(1)}
         >
           {categoria.itens.map((item, index) => (
             <Card
-            id={item.id}
+              id={item.id}
               key={index}
               nome={item.nome}
               foto={item.foto}
               preco={item.preco}
               avaliacao={item.avaliacao}
               loja={item.loja}
+              categoria={categoria.categoria}
               onOpen={onOpen}
             />
           ))}
