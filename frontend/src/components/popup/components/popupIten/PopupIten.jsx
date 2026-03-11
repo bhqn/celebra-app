@@ -22,12 +22,12 @@ export default function PopupContent({
   const [quantidade, setQuantidade] = useState(1);
 
   const aumentarQtd = () => {
-  setQuantidade((prev) => prev + 1);
-};
+    setQuantidade((prev) => prev + 1);
+  };
 
-const diminuirQtd = () => {
-  setQuantidade((prev) => (prev > 1 ? prev - 1 : 1));
-};
+  const diminuirQtd = () => {
+    setQuantidade((prev) => (prev > 1 ? prev - 1 : 1));
+  };
 
   const totalSelecionado = Object.values(saboresSelecionados).reduce(
     (acc, val) => acc + val,
@@ -61,9 +61,9 @@ const diminuirQtd = () => {
   };
 
   const handleAdd = () => {
-     if (sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES) {
-    return;
-  }
+    if (sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES) {
+      return;
+    }
 
     addToCart({
       id,
@@ -102,40 +102,45 @@ const diminuirQtd = () => {
           <p className="modal__title modal__title-desc">Descrição</p>
 
           <p className="modal__description">{descricao}</p>
+          
 
-          <div className="modal__flavors_header">
-            <p>Escolha os sabores</p>
-            <span>
-              {totalSelecionado}/{LIMITE_SABORES}
-            </span>
+        {sabores?.length > 0 && (
+  <>
+    <div className="modal__flavors_header">
+      <p>Escolha os sabores</p>
+      <span>
+        {totalSelecionado}/{LIMITE_SABORES}
+      </span>
+    </div>
+
+    <div className="modal__flavors">
+      {sabores.map((sabor) => {
+        const quantidade = saboresSelecionados[sabor] || 0;
+
+        return (
+          <div key={sabor} className="modal__flavor_row">
+            <span>{sabor}</span>
+
+            {quantidade === 0 ? (
+              <button
+                className="flavor_add"
+                onClick={() => addSabor(sabor)}
+              >
+                +
+              </button>
+            ) : (
+              <div className="flavor_counter">
+                <button onClick={() => removeSabor(sabor)}>-</button>
+                <span>{quantidade}</span>
+                <button onClick={() => addSabor(sabor)}>+</button>
+              </div>
+            )}
           </div>
-
-          <div className="modal__flavors">
-            {sabores?.map((sabor) => {
-              const quantidade = saboresSelecionados[sabor] || 0;
-
-              return (
-                <div key={sabor} className="modal__flavor_row">
-                  <span>{sabor}</span>
-
-                  {quantidade === 0 ? (
-                    <button
-                      className="flavor_add"
-                      onClick={() => addSabor(sabor)}
-                    >
-                      +
-                    </button>
-                  ) : (
-                    <div className="flavor_counter">
-                      <button onClick={() => removeSabor(sabor)}>-</button>
-                      <span>{quantidade}</span>
-                      <button onClick={() => addSabor(sabor)}>+</button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        );
+      })}
+    </div>
+  </>
+)}
         </div>
 
         <div className="modal__actions">
@@ -150,7 +155,9 @@ const diminuirQtd = () => {
           <button
             className="modal__btn"
             onClick={handleAdd}
-            disabled={sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES}
+            disabled={
+              sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES
+            }
           >
             Adicionar ao carrinho
           </button>
