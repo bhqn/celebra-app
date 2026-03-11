@@ -25,9 +25,9 @@ function Cart() {
           <p>Itens: {totalItems}</p>
 
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {items.map((item) => (
+            {items.map((item, index) => (
               <li
-                key={item.id}
+                key={index}
                 style={{
                   display: "flex",
                   gap: 12,
@@ -39,27 +39,53 @@ function Cart() {
                 <img
                   src={item.foto}
                   alt={item.nome}
-                  style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 10 }}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    objectFit: "cover",
+                    borderRadius: 10,
+                  }}
                 />
 
                 <div style={{ flex: 1 }}>
                   <p style={{ margin: 0, fontWeight: 700 }}>{item.nome}</p>
+
                   <p style={{ margin: 0, fontSize: 12 }}>{item.loja}</p>
+
                   <p style={{ margin: 0, fontSize: 12 }}>{item.preco}</p>
+
+                  {item.sabores && (
+                    <p style={{ margin: 0, fontSize: 12 }}>
+                      Sabores:{" "}
+                      {Object.entries(item.sabores)
+                        .map(([sabor, qtd]) => `${sabor} (${qtd})`)
+                        .join(", ")}
+                    </p>
+                  )}
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <button onClick={() => decreaseQty(item.id)}>-</button>
+                  <button onClick={() => decreaseQty(index)}>-</button>
+
                   <span>{item.qty}</span>
-                  <button onClick={() => increaseQty(item.id)}>+</button>
+
+                  <button onClick={() => increaseQty(index)}>+</button>
                 </div>
 
-                <button onClick={() => removeFromCart(item.id)}>Remover</button>
+                <button onClick={() => removeFromCart(item.id)}>
+                  Remover
+                </button>
               </li>
             ))}
           </ul>
 
-          <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between" }}>
+          <div
+            style={{
+              marginTop: 12,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <strong>Total:</strong>
             <strong>{formatBRL(totalPrice)}</strong>
           </div>

@@ -61,7 +61,9 @@ const diminuirQtd = () => {
   };
 
   const handleAdd = () => {
-    if (totalSelecionado !== LIMITE_SABORES) return;
+     if (sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES) {
+    return;
+  }
 
     addToCart({
       id,
@@ -148,7 +150,7 @@ const diminuirQtd = () => {
           <button
             className="modal__btn"
             onClick={handleAdd}
-            disabled={totalSelecionado !== LIMITE_SABORES}
+            disabled={sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES}
           >
             Adicionar ao carrinho
           </button>
