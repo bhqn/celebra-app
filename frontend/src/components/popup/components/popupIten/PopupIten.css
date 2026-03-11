@@ -88,3 +88,90 @@
   transition: background-color 0.3s ease;
   align-self: flex-end; /* botão fica no canto inferior */
 }
+
+.modal__flavors {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modal__flavor {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+}
+
+.modal__flavor--active {
+  border: 1px solid #ea1d2c;
+  background: #ffe9eb;
+  color: #ea1d2c;
+}
+
+.modal__flavor_row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 0;
+border-bottom:1px solid #eee;
+}
+
+.flavor_counter{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.flavor_counter button{
+width:28px;
+height:28px;
+border-radius:50%;
+border:1px solid #ccc;
+background:white;
+cursor:pointer;
+}
+
+.modal__flavors_header{
+  margin-top: 20px;
+  display: flex;
+  gap: 30px
+}
+.modal__btn:disabled{
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.modal__actions{
+display:flex;
+gap:15px;
+align-items:center;
+margin-top:20px;
+}
+
+.quantity_selector{
+display:flex;
+align-items:center;
+gap:10px;
+border:1px solid #ddd;
+border-radius:8px;
+padding:5px 10px;
+}
+
+.quantity_selector button{
+width:30px;
+height:30px;
+border:none;
+background:#eee;
+border-radius:6px;
+cursor:pointer;
+font-size:18px;
+}
+
+.quantity_selector span{
+min-width:20px;
+text-align:center;
+font-weight:600;
+}
