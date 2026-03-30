@@ -29,7 +29,16 @@ function Cart({ isCheckout = false }) {
 
   return (
     <div className="cart__content">
+
+      
+         {isCheckout && (
+      <h2 className="cart__checkout">Pedido</h2>
+         )}
+
+
+         {!isCheckout && (
       <h2 className="cart__title">Seu Carrinho</h2>
+         )}
 
       {items.length === 0 ? (
         <p className="cart__empty">Seu carrinho está vazio.</p>
