@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Stepper from "./components/Stepper/Stepper";
-import Food from "./Pages/food/food";
-import Drinks from "./Pages/drinks/drinks";
+import Food from "./Pages/food/Food";
+import Drinks from "./Pages/drinks/Drinks";
 import Struct from "./Pages/estrutura/Struct";
-import Fun from "./Pages/entreterimento/fun";
+import Fun from "./Pages/entreterimento/Fun";
 import Info from "./Pages/informacoes/Info";
 import "./Main.css";
 import "./components/Stepper/Stepper.css";
-
+import Checkout from "./Pages/checkout/checkout.jsx";
 export default function Main({ onOpen }) {
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -27,7 +27,7 @@ export default function Main({ onOpen }) {
     {
       key: "pay",
       label: "Pagamento",
-      element: <div />,
+      element: <Checkout />,
       customClass: "stepper__label--ajustado",
     },
   ];

@@ -1,7 +1,7 @@
 import { useCart } from "../../../../contexts/useCart";
 import "./Cart.css";
 
-function Cart() {
+function Cart({ isCheckout = false }) {
   const {
     items,
     increaseQty,
@@ -61,17 +61,21 @@ function Cart() {
                               </p>
                             )}
                           </div>
+                          {!isCheckout && (
                           <div className="cart__item-qty">
                             <button onClick={() => decreaseQty(index)}>-</button>
                             <span>{item.qty}</span>
                             <button onClick={() => increaseQty(index)}>+</button>
                           </div>
+                          )}
+                          {!isCheckout && (
                           <button
                             className="cart__item-remove"
                             onClick={() => removeFromCart(index)}
                           >
                             Remover
                           </button>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -87,11 +91,12 @@ function Cart() {
             <strong>Total:</strong>
             <strong>{formatBRL(totalPrice)}</strong>
           </div>
-
+            {!isCheckout && (
           <div className="cart__actions">
             <button onClick={clearCart}>Limpar</button>
             <button>Finalizar</button>
           </div>
+          )}
         </>
       )}
     </div>

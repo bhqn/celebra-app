@@ -4,6 +4,10 @@ import Main from "../Main/Main";
 import Popup from "../popup/popup";
 import PopupIten from "../popup/components/popupIten/PopupIten"
 import Cart from "../popup/components/cart/Cart";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+const stripePromise = loadStripe("SUA_PUBLIC_KEY");
+
 
 import "./App.css";
 
@@ -35,8 +39,10 @@ function App() {
 
   return (
     <>
+     <Elements stripe={stripePromise}>
       <Header onOpen={openPopup} onOpenCart={openCart}/>
       <Main onOpen={openPopup} />
+      </Elements>
       {isOpen && (
   <Popup onClose={closePopup}>
     {selectedItem ? (
