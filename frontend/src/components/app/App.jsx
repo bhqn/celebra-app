@@ -42,7 +42,7 @@ function App() {
      <Elements stripe={stripePromise}>
       <Header onOpen={openPopup} onOpenCart={openCart}/>
       <Main onOpen={openPopup} />
-      </Elements>
+      
       {isOpen && (
   <Popup onClose={closePopup}>
     {selectedItem ? (
@@ -52,6 +52,7 @@ function App() {
     )}
   </Popup>
 )}
+</Elements>
     </>
   );
 }

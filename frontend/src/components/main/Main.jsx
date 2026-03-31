@@ -8,6 +8,7 @@ import Info from "./Pages/informacoes/Info";
 import "./Main.css";
 import "./components/Stepper/Stepper.css";
 import Checkout from "./Pages/checkout/checkout.jsx";
+
 export default function Main({ onOpen }) {
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -27,10 +28,12 @@ export default function Main({ onOpen }) {
     {
       key: "pay",
       label: "Pagamento",
-      element: <Checkout />,
+      element: <Checkout onConfirm={() => console.log("pagamento confirmado!")} />,
       customClass: "stepper__label--ajustado",
     },
   ];
+
+  const isLastStep = currentStep === steps.length - 1;
 
   return (
     <div className="main__wizard">
@@ -42,24 +45,31 @@ export default function Main({ onOpen }) {
 
       <div className="main__actions">
         {currentStep !== 0 && (
-          <button
-            className="main__back_btn"
-            type="button"
-            onClick={back}
-          >
+          <button className="main__back_btn" type="button" onClick={back}>
             Voltar
           </button>
         )}
 
-        <button
-          className="main__next_btn"
-          type={currentStep === 0 ? "submit" : "button"}
-          form={currentStep === 0 ? "info-form" : undefined}
-          onClick={currentStep !== 0 ? next : undefined}
-          disabled={currentStep === steps.length - 1}
-        >
-          Próximo
-        </button>
+        {!isLastStep && (
+          <button
+            className="main__next_btn"
+            type={currentStep === 0 ? "submit" : "button"}
+            form={currentStep === 0 ? "info-form" : undefined}
+            onClick={currentStep !== 0 ? next : undefined}
+          >
+            Próximo
+          </button>
+        )}
+
+        {isLastStep && (
+          <button
+            className="main__next_btn"
+            type="submit"
+            form="payment-form"
+          >
+            Confirmar pagamento
+          </button>
+        )}
       </div>
     </div>
   );

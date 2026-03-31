@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import "./PaymentForm.css";
 
-function PaymentForm() {
+function PaymentForm({ onConfirm }) {
   const stripe = useStripe();
   const elements = useElements();
   const [form, setForm] = useState({
@@ -80,6 +80,8 @@ function PaymentForm() {
       cpf: form.cpf,
       ...form,
     });
+
+    onConfirm?.();
   };
 
   return (
@@ -90,7 +92,7 @@ function PaymentForm() {
         <p className="payment__subtitle">Preencha os dados abaixo para concluir sua compra</p>
       </div>
 
-      <form className="payment__form" onSubmit={handleSubmit}>
+      <form id="payment-form" className="payment__form" onSubmit={handleSubmit}>
 
         <fieldset className="payment__section">
           <legend className="payment__section-label">Dados pessoais</legend>
@@ -198,20 +200,7 @@ function PaymentForm() {
 
         {error && <p className="payment__error">{error}</p>}
 
-        <button
-          type="submit"
-          className={`payment__btn${loading ? " payment__btn--loading" : ""}`}
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="payment__spinner" aria-label="Carregando" />
-          ) : (
-            "Confirmar pagamento"
-          )}
-        </button>
-
         <p className="payment__secure">
-         
           Pagamento processado com segurança pelo Stripe
         </p>
       </form>
