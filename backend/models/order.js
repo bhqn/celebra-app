@@ -1,0 +1,19 @@
+const OrderSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  store: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
+  items: [
+    {
+      product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      quantity: Number,
+      price: Number
+    }
+  ],
+  total: Number,
+  status: {
+    type: String,
+    enum: ["pending", "paid", "cancelled"],
+    default: "pending"
+  }
+}, { timestamps: true });
+
+export default mongoose.model("Order", OrderSchema);
