@@ -1,4 +1,5 @@
 import Order from "../models/order.js";
+import Product from "../models/products.js";
 
 // Step 1: Criar pedido
 export const createOrder = async (req, res) => {
@@ -29,17 +30,42 @@ export const createOrder = async (req, res) => {
 // Step 2/3: Adicionar produto ao carrinho do pedido
 export const addProductToOrder = async (req, res) => {
   const { orderId } = req.params;
-  const { productId, quantidade, preco, sabores } = req.body;
+  const { productId, quantidade, sabores } = req.body;
 
   try {
     const order = await Order.findById(orderId);
     if (!order) return res.status(404).json({ message: "Pedido não encontrado" });
 
-    order.carrinho.push({ productId, quantidade, preco, sabores });
-    order.total = order.carrinho.reduce((acc, item) => acc + item.preco * item.quantidade, 0);
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Produto não encontrado" });
+
+    // 🔥 verifica se já existe no carrinho
+    const existingProduct = order.carrinho.find(
+      (p) => p.productId.toString() === productId
+    );
+
+    if (existingProduct) {
+      // soma quantidade
+      existingProduct.quantidade += quantidade;
+    } else {
+      // adiciona novo
+      order.carrinho.push({
+        productId,
+        quantidade,
+        preco: product.preco,
+        sabores
+      });
+    }
+
+    // recalcula total
+    order.total = order.carrinho.reduce(
+      (acc, item) => acc + item.preco * item.quantidade,
+      0
+    );
 
     await order.save();
     res.status(200).json(order);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
