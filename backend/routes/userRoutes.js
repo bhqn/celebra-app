@@ -22,4 +22,8 @@ router.get("/address", auth, getAddresses);
 router.delete("/address/:addressId", auth, removeAddress);
 router.put("/address/default/:addressId", auth, setDefaultAddress);
 
+
+
+
+
 export default router;

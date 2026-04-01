@@ -1,19 +1,26 @@
-const OrderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  store: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
-  items: [
+import mongoose from "mongoose";
+
+const orderSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  dataEvento: { type: Date, required: true },
+  horaInicio: { type: String, required: true },
+  duracao: { type: Number, required: true },
+  tipoEvento: { type: String, required: true },
+  tipoPersonalizado: { type: String },
+  local: { type: String, required: true },
+  convidados: { type: Number, required: true },
+  carrinho: [
     {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-      quantity: Number,
-      price: Number
-    }
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      quantidade: { type: Number, default: 1 },
+      preco: { type: Number, required: true },
+      sabores: [{ type: String }],
+    },
   ],
-  total: Number,
-  status: {
-    type: String,
-    enum: ["pending", "paid", "cancelled"],
-    default: "pending"
-  }
+  total: { type: Number, default: 0 },
+  status: { type: String, default: "iniciado" }, // iniciado, pago, cancelado
 }, { timestamps: true });
 
-export default mongoose.model("Order", OrderSchema);
+const Order = mongoose.model("Order", orderSchema);
+
+export default Order;
