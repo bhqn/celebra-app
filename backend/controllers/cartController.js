@@ -1,60 +1,68 @@
 import Cart from "../models/cart.js";
 
 // Adicionar produto ao carrinho
-export const addToCart = async (req, res) => {
-  const userId = req.user.id; // vem do middleware auth
+export const addToCart = (req, res) => {
+  const userId = req.user.id;
   const { products } = req.body;
 
-  try {
-    // Verifica se o usuário já tem carrinho
-    let cart = await Cart.findOne({ userId });
-
-    if (cart) {
-      // Se já tem carrinho, adiciona os produtos
-      cart.products.push(...products);
-      await cart.save();
-    } else {
-      // Se não tem carrinho, cria um novo
-      cart = new Cart({ userId, products });
-      await cart.save();
-    }
-
-    res.status(200).json(cart);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  Cart.findOne({ userId })
+    .then((cart) => {
+      if (cart) {
+        cart.products.push(...products);
+        return cart.save();
+      } else {
+        const newCart = new Cart({ userId, products });
+        return newCart.save();
+      }
+    })
+    .then((savedCart) => {
+      res.status(200).json(savedCart);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 };
 
 // Listar carrinho do usuário
-export const getCart = async (req, res) => {
+export const getCart = (req, res) => {
   const userId = req.user.id;
 
-  try {
-    const cart = await Cart.findOne({ userId }).populate("products.productId");
-    if (!cart) return res.status(404).json({ message: "Carrinho vazio" });
-
-    res.status(200).json(cart);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  Cart.findOne({ userId })
+    .populate("products.productId")
+    .then((cart) => {
+      if (!cart) {
+        return res.status(404).json({ message: "Carrinho vazio" });
+      }
+      res.status(200).json(cart);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 };
 
 // Remover item do carrinho
-export const removeFromCart = async (req, res) => {
+export const removeFromCart = (req, res) => {
   const userId = req.user.id;
   const { productId } = req.params;
 
-  try {
-    const cart = await Cart.findOne({ userId });
-    if (!cart) return res.status(404).json({ message: "Carrinho vazio" });
+  Cart.findOne({ userId })
+    .then((cart) => {
+      if (!cart) {
+        return res.status(404).json({ message: "Carrinho vazio" });
+      }
 
-    cart.products = cart.products.filter(
-      (p) => p.productId.toString() !== productId
-    );
+      cart.products = cart.products.filter(
+        (p) => p.productId.toString() !== productId
+      );
 
-    await cart.save();
-    res.status(200).json(cart);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+      return cart.save();
+    })
+    .then((updatedCart) => {
+      if (updatedCart) {
+        res.status(200).json(updatedCart);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 };

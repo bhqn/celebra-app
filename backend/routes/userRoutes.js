@@ -12,11 +12,11 @@ import { auth } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// 🔐 auth
+//  auth
 router.post("/register", register);
 router.post("/login", login);
 
-// 📍 endereço
+//  endereço
 router.post("/address", auth, addAddress);
 router.get("/address", auth, getAddresses);
 router.delete("/address/:addressId", auth, removeAddress);

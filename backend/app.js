@@ -8,19 +8,19 @@ import orderRoutes from "./routes/orderRoutes.js";
 
 const app = express();
 
-// 🔓 Middlewares
+//  Middlewares
 app.use(cors());
 app.use(express.json());
 
-// 📌 Rotas
+//  Rotas
 app.use("/user", userRoutes);
 app.use("/products", productsRoute);
 app.use("/api/cart", cartRoutes);
 app.use("/api/order", orderRoutes);
 
-// 🌐 Rota teste
+//  Rota teste
 app.get("/", (req, res) => {
-  res.send("API rodando 🚀");
+  res.send("API rodando ");
 });
 
 export default app;
