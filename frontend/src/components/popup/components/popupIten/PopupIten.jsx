@@ -2,6 +2,7 @@ import Star from "../../../../assets/star.svg";
 import "./PopupIten.css";
 import { useCart } from "../../../../contexts/useCart";
 import { useState } from "react";
+import { formatPrice } from "../../../../utils/formatPrice";
 
 export default function PopupContent({
   id,
@@ -92,7 +93,7 @@ export default function PopupContent({
 
         <div className="modal__wrap">
           <p className="modal__store">{loja}</p>
-          <p className="modal__price">{preco}</p>
+          <p className="modal__price">{formatPrice (preco)}</p>
         </div>
 
         <div className="modal__review">

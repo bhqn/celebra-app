@@ -4,6 +4,7 @@ import CategoryCarousel from "../../components/CategoryCarousel/CategoryCarousel
 import Card from "../../components/card/Card";
 import { groupProducts } from "../../../../utils/groupProducts"
 
+
 function Food({ onOpen }) {
   const [food, setFood] = useState([]);
   const [loading, setLoading] = useState(true);

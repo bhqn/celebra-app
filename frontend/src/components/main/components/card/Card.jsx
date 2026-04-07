@@ -1,5 +1,6 @@
 import "./Card.css"
 import star from "../../../../assets/star.svg"
+import { formatPrice } from "../../../../utils/formatPrice"
 
 function Card ({ id, nome, foto, preco, avaliacao, loja, descricao,
     sabores,categoria, subcategoria, onOpen }){
@@ -21,7 +22,7 @@ function Card ({ id, nome, foto, preco, avaliacao, loja, descricao,
                 <img src={star}/>
               </div>
 
-              <p className="card__price">{preco}</p>
+              <p className="card__price">{formatPrice (preco)}</p>
             </div>
         </div>
     )
