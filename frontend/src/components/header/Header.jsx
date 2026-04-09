@@ -2,14 +2,17 @@ import "./Header.css";
 import Logo from "../../assets/logo.png";
 import Popup from "../popup/popup"
 import { useNavigate } from "react-router-dom";
+import { useOrder } from "../../contexts/OrderContext";
 
 function Header({onOpen}) {
-
+  const { clearOrder } = useOrder();
   const navigate = useNavigate();
-    const handleLogout = () => {
+
+  const handleLogout = () => {
+    clearOrder();
     localStorage.removeItem("token"); 
     localStorage.removeItem("user");
-    navigate("/login"), { replace: true }; 
+    navigate("/login", { replace: true }); 
   };
 
   const user = JSON.parse(localStorage.getItem("user"));

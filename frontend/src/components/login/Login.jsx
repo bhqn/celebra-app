@@ -32,6 +32,7 @@ function Login() {
     console.log("TOKEN JWT:", res.data.token);
     console.log("USUÁRIO:", res.data.user);
 
+      localStorage.removeItem("orderId");
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/");

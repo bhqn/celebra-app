@@ -5,9 +5,13 @@ const OrderContext = createContext(null);
 
 export function OrderProvider({ children }) {
   const [order, setOrder] = useState(null);
-  const [orderId, setOrderId] = useState(
-    localStorage.getItem("orderId")
-  );
+  const [orderId, setOrderId] = useState(localStorage.getItem("orderId"));
+
+  const clearOrder = () => {
+    localStorage.removeItem("orderId");
+    setOrder(null);
+    setOrderId(null);
+  };
 
   // 🔥 buscar order ao carregar
   useEffect(() => {
@@ -19,6 +23,10 @@ export function OrderProvider({ children }) {
         setOrder(res.data);
       } catch (err) {
         console.error("Erro ao buscar order:", err);
+
+        if (err.response?.status === 403 || err.response?.status === 404) {
+          clearOrder();
+        }
       }
     }
 
@@ -33,25 +41,35 @@ export function OrderProvider({ children }) {
       localStorage.setItem("orderId", res.data._id);
       setOrderId(res.data._id); // 🔥 IMPORTANTE
       setOrder(res.data);
+      console.log("ORDER CRIADA:", res.data);
+      return res.data;
     } catch (err) {
       console.error("Erro ao criar order:", err);
+      return null;
     }
   };
 
   // ✅ add produto
-  const addProduct = async (product) => {
+  const addProduct = async (product, overrideOrderId = null) => {
+    const targetOrderId = overrideOrderId || orderId;
+
+    if (!targetOrderId) {
+      console.error("Order ainda não existe!");
+      return;
+    }
+
     try {
-      const res = await api.post(
-        `/api/order/${orderId}/product`,
-        {
-          productId: product.id,
-          quantity: product.quantidade || 1,
-          sabores: product.sabores || [],
-        }
-      );
+      const res = await api.post(`/api/order/${targetOrderId}/product`, {
+        productId: product.id,
+        quantity: product.quantidade || 1,
+        sabores: product.sabores || [],
+      });
 
       setOrder(res.data);
     } catch (err) {
+      if (err.response?.status === 403 || err.response?.status === 404) {
+        clearOrder();
+      }
       console.error("Erro ao adicionar produto:", err);
     }
   };
@@ -60,7 +78,7 @@ export function OrderProvider({ children }) {
   const removeProduct = async (productId) => {
     try {
       const res = await api.delete(
-        `/api/order/${orderId}/product/${productId}`
+        `/api/order/${orderId}/product/${productId}`,
       );
 
       setOrder(res.data);
@@ -72,22 +90,14 @@ export function OrderProvider({ children }) {
   // ✅ update quantidade
   const updateQuantity = async (productId, quantity) => {
     try {
-      const res = await api.put(
-        `/api/order/${orderId}/product/${productId}`,
-        { quantity }
-      );
+      const res = await api.put(`/api/order/${orderId}/product/${productId}`, {
+        quantity,
+      });
 
       setOrder(res.data);
     } catch (err) {
       console.error("Erro ao atualizar qty:", err);
     }
-  };
-
-  // 🔥 RESET (muito importante pra logout / finalizar)
-  const clearOrder = () => {
-    localStorage.removeItem("orderId");
-    setOrder(null);
-    setOrderId(null);
   };
 
   return (

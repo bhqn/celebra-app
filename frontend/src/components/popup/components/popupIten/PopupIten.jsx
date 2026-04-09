@@ -69,9 +69,10 @@ const handleAdd = async () => {
   }
 
   try {
-    // 🔥 garante que existe order
-    if (!orderId) {
-      await createOrder({
+    let targetOrderId = orderId;
+
+    if (!targetOrderId) {
+      const orderCreated = await createOrder({
         dataEvento: new Date(),
         horaInicio: "15:00",
         duracao: 3,
@@ -79,16 +80,26 @@ const handleAdd = async () => {
         local: "Não definido",
         convidados: 1,
       });
+
+      targetOrderId = orderCreated?._id;
     }
 
-    await addProduct({
-      id,
-      nome,
-      foto,
-      preco,
-      sabores: Object.keys(saboresSelecionados), // 🔥 backend espera array
-      quantidade,
-    });
+    if (!targetOrderId) {
+      console.error("Não foi possível criar a order antes de adicionar o produto");
+      return;
+    }
+
+    await addProduct(
+      {
+        id,
+        nome,
+        foto,
+        preco,
+        sabores: Object.keys(saboresSelecionados), // 🔥 backend espera array
+        quantidade,
+      },
+      targetOrderId,
+    );
 
     onClose();
   } catch (err) {

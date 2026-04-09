@@ -47,6 +47,7 @@ function Register() {
         },
       });
 
+      localStorage.removeItem("orderId");
       localStorage.setItem("token", res.data.token);
       navigate("/login")
 
