@@ -10,6 +10,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import Login from "../login/Login";
 import Register from "../register/Register";
 import PrivateRoute from "../PrivateRoute";
+import { OrderProvider } from "../../contexts/OrderContext";
 
 import "./App.css";
 
@@ -44,29 +45,31 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/*  públicas */}
+        {/* públicas */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/*  privada */}
+        {/* privada */}
         <Route
           path="/"
           element={
             <PrivateRoute>
-              <Elements stripe={stripePromise}>
-                <Header onOpen={openPopup} onOpenCart={openCart} />
-                <Main onOpen={openPopup} />
+              <OrderProvider> 
+                <Elements stripe={stripePromise}>
+                  <Header onOpen={openPopup} onOpenCart={openCart} />
+                  <Main onOpen={openPopup} />
 
-                {isOpen && (
-                  <Popup onClose={closePopup}>
-                    {selectedItem ? (
-                      <PopupIten {...selectedItem} onClose={closePopup} />
-                    ) : (
-                      <Cart />
-                    )}
-                  </Popup>
-                )}
-              </Elements>
+                  {isOpen && (
+                    <Popup onClose={closePopup}>
+                      {selectedItem ? (
+                        <PopupIten {...selectedItem} onClose={closePopup} />
+                      ) : (
+                        <Cart />
+                      )}
+                    </Popup>
+                  )}
+                </Elements>
+              </OrderProvider>
             </PrivateRoute>
           }
         />

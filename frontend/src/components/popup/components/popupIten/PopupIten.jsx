@@ -1,9 +1,8 @@
 import Star from "../../../../assets/star.svg";
 import "./PopupIten.css";
-import { useCart } from "../../../../contexts/useCart";
 import { useState } from "react";
 import { formatPrice } from "../../../../utils/formatPrice";
-
+import { useOrder } from "../../../../contexts/OrderContext";
 export default function PopupContent({
   id,
   nome,
@@ -17,7 +16,8 @@ export default function PopupContent({
   subcategoria,
   onClose,
 }) {
-  const { addToCart } = useCart();
+
+  const { addProduct, createOrder, orderId } = useOrder();
 
   const LIMITE_SABORES = 2;
 
@@ -63,26 +63,38 @@ export default function PopupContent({
     });
   };
 
-  const handleAdd = () => {
-    if (sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES) {
-      return;
+const handleAdd = async () => {
+  if (sabores?.length > 0 && totalSelecionado !== LIMITE_SABORES) {
+    return;
+  }
+
+  try {
+    // 🔥 garante que existe order
+    if (!orderId) {
+      await createOrder({
+        dataEvento: new Date(),
+        horaInicio: "15:00",
+        duracao: 3,
+        tipoEvento: "Pedido",
+        local: "Não definido",
+        convidados: 1,
+      });
     }
 
-    addToCart({
+    await addProduct({
       id,
       nome,
       foto,
       preco,
-      avaliacao,
-      loja,
-      sabores: saboresSelecionados,
+      sabores: Object.keys(saboresSelecionados), // 🔥 backend espera array
       quantidade,
-      categoria,
-      subcategoria,
     });
 
     onClose();
-  };
+  } catch (err) {
+    console.error("Erro ao adicionar produto:", err);
+  }
+};
 
   return (
     <div className="modal__content">

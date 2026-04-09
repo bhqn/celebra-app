@@ -33,6 +33,7 @@ function Login() {
     console.log("USUÁRIO:", res.data.user);
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/");
 
       alert("Login realizado!");

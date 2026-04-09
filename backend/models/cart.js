@@ -7,14 +7,13 @@ const cartSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    products: [
-      {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-        quantidade: { type: Number, default: 1 },
-        preco: { type: Number, required: true },
-        sabores: [{ type: String }],
-      },
-    ],
+ products: [
+  {
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    quantity: { type: Number, default: 1 }, 
+    sabores: [{ type: String }],
+  },
+],
   },
   { timestamps: true },
 );

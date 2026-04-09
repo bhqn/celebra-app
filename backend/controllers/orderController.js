@@ -11,7 +11,7 @@ export const createOrder = (req, res) => {
     tipoEvento,
     tipoPersonalizado,
     local,
-    convidados
+    convidados,
   } = req.body;
 
   const order = new Order({
@@ -23,8 +23,8 @@ export const createOrder = (req, res) => {
     tipoPersonalizado,
     local,
     convidados,
-    carrinho: [],
-    total: 0
+    products: [],
+    total: 0,
   });
 
   order
@@ -37,108 +37,121 @@ export const createOrder = (req, res) => {
     });
 };
 
+const calculateTotal = async (order) => {
+  await order.populate("products.productId");
+
+  order.total = order.products.reduce((acc, p) => {
+    return acc + p.productId.preco * p.quantity;
+  }, 0);
+};
+
 // Step 2/3: Adicionar produto ao carrinho do pedido
-export const addProductToOrder = (req, res) => {
-  const { orderId } = req.params;
-  const { productId, quantidade, sabores } = req.body;
+export const addProductToOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { productId, quantity, sabores } = req.body;
 
-  let orderRef;
+    const order = await Order.findById(orderId);
 
-  Order.findById(orderId)
-    .then((order) => {
-      if (!order) {
-        return res.status(404).json({ message: "Pedido não encontrado" });
-      }
+    if (!order) {
+      return res.status(404).json({ message: "Order não encontrada" });
+    }
 
-      orderRef = order;
-      return Product.findById(productId);
-    })
-    .then((product) => {
-      if (!product) {
-        return res.status(404).json({ message: "Produto não encontrado" });
-      }
+    const existing = order.products.find(
+      (p) =>
+        p.productId.toString() === productId &&
+        JSON.stringify(p.sabores) === JSON.stringify(sabores)
+    );
 
-      const existingProduct = orderRef.carrinho.find(
-        (p) => p.productId.toString() === productId
-      );
+    if (existing) {
+      existing.quantity += quantity || 1;
+    } else {
+      order.products.push({
+        productId,
+        quantity: quantity || 1,
+        sabores,
+      });
+    }
 
-      if (existingProduct) {
-        existingProduct.quantidade += quantidade;
-      } else {
-        orderRef.carrinho.push({
-          productId,
-          quantidade,
-          preco: product.preco,
-          sabores
-        });
-      }
+    if (order.userId.toString() !== req.user.id) {
+  return res.status(403).json({ message: "Acesso negado" });
+}
 
-      orderRef.total = orderRef.carrinho.reduce(
-        (acc, item) => acc + item.preco * item.quantidade,
-        0
-      );
+    await calculateTotal(order);
+    await order.save();
 
-      return orderRef.save();
-    })
-    .then((updatedOrder) => {
-      if (updatedOrder) {
-        res.status(200).json(updatedOrder);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // Remover produto do carrinho
-export const removeProductFromOrder = (req, res) => {
+export const removeProductFromOrder = async (req, res) => {
   const { orderId, productId } = req.params;
 
-  Order.findById(orderId)
-    .then((order) => {
-      if (!order) {
-        return res.status(404).json({ message: "Pedido não encontrado" });
-      }
+  const order = await Order.findById(orderId);
 
-      order.carrinho = order.carrinho.filter(
-        (p) => p.productId.toString() !== productId
-      );
+  if (!order) {
+    return res.status(404).json({ message: "Order não encontrada" });
+  }
 
-      order.total = order.carrinho.reduce(
-        (acc, item) => acc + item.preco * item.quantidade,
-        0
-      );
+  order.products = order.products.filter(
+    (p) => p.productId.toString() !== productId
+  );
+  
+  if (order.userId.toString() !== req.user.id) {
+  return res.status(403).json({ message: "Acesso negado" });
+}
+  await calculateTotal(order);
+  await order.save();
 
-      return order.save();
-    })
-    .then((updatedOrder) => {
-      if (updatedOrder) {
-        res.status(200).json(updatedOrder);
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
+  res.status(200).json(order);
 };
-
 // Obter pedido completo
-export const getOrder = (req, res) => {
+export const getOrder = async (req, res) => {
   const { orderId } = req.params;
 
-  Order.findById(orderId)
-    .populate("carrinho.productId")
-    .then((order) => {
-      if (!order) {
-        return res.status(404).json({ message: "Pedido não encontrado" });
-      }
+  const order = await Order.findById(orderId).populate("products.productId");
 
-      res.status(200).json(order);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
+  res.status(200).json(order);
 };
 
+export const updateProductInOrder = async (req, res) => {
+  const { orderId, productId } = req.params;
+  const { quantity } = req.body;
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return res.status(404).json({ message: "Order não encontrada" });
+  }
+
+  const item = order.products.find(
+    (p) => p.productId.toString() === productId
+  );
+
+  if (!item) {
+    return res.status(404).json({ message: "Produto não encontrado" });
+  }
+
+  if (quantity <= 0) {
+    order.products = order.products.filter(
+      (p) => p.productId.toString() !== productId
+    );
+  } else {
+    item.quantity = quantity;
+  }
+
+  if (order.userId.toString() !== req.user.id) {
+  return res.status(403).json({ message: "Acesso negado" });
+}
+
+  await calculateTotal(order);
+  await order.save();
+
+  res.status(200).json(order);
+};
 // Finalizar pedido (checkout)
 export const checkoutOrder = (req, res) => {
   const { orderId } = req.params;
@@ -156,7 +169,7 @@ export const checkoutOrder = (req, res) => {
       if (updatedOrder) {
         res.status(200).json({
           message: "Pedido finalizado com sucesso",
-          order: updatedOrder
+          order: updatedOrder,
         });
       }
     })
