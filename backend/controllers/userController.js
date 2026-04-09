@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 // REGISTER
 export const register = (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, address } = req.body;
 
   User.findOne({ email })
     .then((userExists) => {
@@ -21,6 +21,9 @@ export const register = (req, res) => {
         name,
         email,
         password: hashedPassword,
+        addresses: address
+          ? [{ ...address, isDefault: true }]
+          : [],
       });
     })
     .then((user) => {
@@ -38,6 +41,7 @@ export const register = (req, res) => {
           id: user._id,
           name: user.name,
           email: user.email,
+          addresses: user.addresses,
         },
       });
     })
@@ -45,7 +49,6 @@ export const register = (req, res) => {
       res.status(500).json({ error: error.message });
     });
 };
-
 // LOGIN
 export const login = (req, res) => {
   const { email, password } = req.body;

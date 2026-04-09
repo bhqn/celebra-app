@@ -1,36 +1,39 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import Popup from "../popup/popup";
-import PopupIten from "../popup/components/popupIten/PopupIten"
+import PopupIten from "../popup/components/popupIten/PopupIten";
 import Cart from "../popup/components/cart/Cart";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-const stripePromise = loadStripe("SUA_PUBLIC_KEY");
-
+import Login from "../login/Login";
+import Register from "../register/Register";
+import PrivateRoute from "../PrivateRoute";
 
 import "./App.css";
 
+const stripePromise = loadStripe("SUA_PUBLIC_KEY");
+
 function App() {
   const [selectedItem, setSelectedItem] = useState(null);
-  // estado: ui
   const [isOpen, setIsOpen] = useState(false);
 
   const openCart = () => {
-  setSelectedItem(null);
-  setIsOpen(true);
-};
+    setSelectedItem(null);
+    setIsOpen(true);
+  };
 
   const openPopup = (item) => {
     setSelectedItem(item);
     setIsOpen(true);
   };
+
   const closePopup = () => {
     setIsOpen(false);
     setSelectedItem(null);
-  }
+  };
 
-  // ui: fecha popup com ESC
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && closePopup();
     window.addEventListener("keydown", onEsc);
@@ -38,24 +41,39 @@ function App() {
   }, []);
 
   return (
-    <>
-     <Elements stripe={stripePromise}>
-      <Header onOpen={openPopup} onOpenCart={openCart}/>
-      <Main onOpen={openPopup} />
-      
-      {isOpen && (
-  <Popup onClose={closePopup}>
-    {selectedItem ? (
-      <PopupIten {...selectedItem} onClose={closePopup} />
-    ) : (
-      <Cart /> // carrinho vazio
-    )}
-  </Popup>
-)}
-</Elements>
-    </>
+    <BrowserRouter>
+      <Routes>
+
+        {/*  públicas */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/*  privada */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Elements stripe={stripePromise}>
+                <Header onOpen={openPopup} onOpenCart={openCart} />
+                <Main onOpen={openPopup} />
+
+                {isOpen && (
+                  <Popup onClose={closePopup}>
+                    {selectedItem ? (
+                      <PopupIten {...selectedItem} onClose={closePopup} />
+                    ) : (
+                      <Cart />
+                    )}
+                  </Popup>
+                )}
+              </Elements>
+            </PrivateRoute>
+          }
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
 export default App;
-
