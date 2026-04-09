@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Info.css";
 import { useForm } from "react-hook-form";
+import { useOrder } from "../../../../contexts/OrderContext";
 
 const EVENT_TYPES = [
   { label: "Aniversário",      value: "Aniversário" },
@@ -12,6 +13,8 @@ const EVENT_TYPES = [
 ];
 
 function Info({ next }) {
+  const { createOrder, orderId } = useOrder();
+
   const {
     register,
     handleSubmit,
@@ -42,10 +45,24 @@ function Info({ next }) {
     );
   }
 
-  function onSubmit(data) {
+  async function onSubmit(data) {
     const finalType =
       data.tipoEvento === "outro" ? data.tipoPersonalizado : data.tipoEvento;
-    console.log("Dados do formulário:", { ...data, tipoEvento: finalType });
+
+    const orderData = {
+      ...data,
+      tipoEvento: finalType,
+      products: [],
+      total: 0,
+    };
+
+    if (!orderId) {
+      const createdOrder = await createOrder(orderData);
+      if (!createdOrder) {
+        return;
+      }
+    }
+
     next();
   }
 
@@ -145,7 +162,10 @@ function Info({ next }) {
               placeholder="Endereço ou lugar"
               value={location}
               {...register("local", { required: true })}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => {
+                setLocation(e.target.value);
+                setValue("local", e.target.value, { shouldValidate: true });
+              }}
             />
             <button
               className="info__location-icon-btn"
