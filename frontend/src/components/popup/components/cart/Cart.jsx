@@ -65,7 +65,7 @@ function Cart({ isCheckout = false }) {
                             </p>
 
                             <p className="cart__item-price">
-                              {formatPrice(item.preco)}
+                              {formatPrice(item.productId?.preco)}
                             </p>
 
                             {item.sabores?.length > 0 && (

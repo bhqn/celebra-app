@@ -57,25 +57,32 @@ export const addProductToOrder = async (req, res) => {
       return res.status(404).json({ message: "Order não encontrada" });
     }
 
+    if (order.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Acesso negado" });
+    }
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Produto não encontrado" });
+    }
+
     const existing = order.products.find(
       (p) =>
         p.productId.toString() === productId &&
-        JSON.stringify(p.sabores) === JSON.stringify(sabores)
+        JSON.stringify(p.sabores) === JSON.stringify(sabores),
     );
 
     if (existing) {
       existing.quantity += quantity || 1;
     } else {
       order.products.push({
+        nome: product.nome,
         productId,
         quantity: quantity || 1,
         sabores,
       });
     }
-
-    if (order.userId.toString() !== req.user.id) {
-  return res.status(403).json({ message: "Acesso negado" });
-}
 
     await calculateTotal(order);
     await order.save();
@@ -85,7 +92,6 @@ export const addProductToOrder = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 // Remover produto do carrinho
 export const removeProductFromOrder = async (req, res) => {
   const { orderId, productId } = req.params;
