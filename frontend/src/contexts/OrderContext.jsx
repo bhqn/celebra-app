@@ -7,7 +7,9 @@ export function OrderProvider({ children }) {
   const [order, setOrder] = useState(null);
   const [orderId, setOrderId] = useState(localStorage.getItem("orderId"));
 
-  const clearOrder = () => {
+  const clearOrder = async() => {
+
+    await api.delete(`/order/${orderId}/clear`);
     localStorage.removeItem("orderId");
     setOrder(null);
     setOrderId(null);
@@ -19,7 +21,7 @@ export function OrderProvider({ children }) {
 
     async function fetchOrder() {
       try {
-        const res = await api.get(`/api/order/${orderId}`);
+        const res = await api.get(`/order/${orderId}`);
         setOrder(res.data);
       } catch (err) {
         console.error("Erro ao buscar order:", err);
@@ -36,7 +38,7 @@ export function OrderProvider({ children }) {
   // ✅ criar order
   const createOrder = async (data) => {
     try {
-      const res = await api.post("/api/order", data);
+      const res = await api.post("/order", data);
 
       localStorage.setItem("orderId", res.data._id);
       setOrderId(res.data._id); // 🔥 IMPORTANTE
@@ -59,7 +61,7 @@ export function OrderProvider({ children }) {
     }
 
     try {
-      const res = await api.post(`/api/order/${targetOrderId}/product`, {
+      const res = await api.post(`/order/${targetOrderId}/product`, {
         productId: product.id,
         quantity: product.quantidade || 1,
         sabores: product.sabores || [],
@@ -78,7 +80,7 @@ export function OrderProvider({ children }) {
   const removeProduct = async (productId) => {
     try {
       const res = await api.delete(
-        `/api/order/${orderId}/product/${productId}`,
+        `/order/${orderId}/product/${productId}`,
       );
 
       setOrder(res.data);
@@ -90,7 +92,7 @@ export function OrderProvider({ children }) {
   // ✅ update quantidade
   const updateQuantity = async (productId, quantity) => {
     try {
-      const res = await api.put(`/api/order/${orderId}/product/${productId}`, {
+      const res = await api.put(`/order/${orderId}/product/${productId}`, {
         quantity,
       });
 

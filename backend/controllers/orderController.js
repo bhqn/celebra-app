@@ -183,3 +183,62 @@ export const checkoutOrder = (req, res) => {
       res.status(500).json({ error: err.message });
     });
 };
+
+//caso o order esteja no "iniciado", recupere o order
+export const getCurrentOrder  = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // procura order em andamento
+    let order = await Order.findOne({
+      userId,
+      status: "iniciado",
+    }).sort({ createdAt: -1 });
+
+    // se não existir, cria novo
+    if (!order) {
+      order = await Order.create({
+        userId,
+        dataEvento: new Date(),
+        horaInicio: "00:00",
+        duracao: 0,
+        tipoEvento: "default",
+        local: "default",
+        convidados: 0,
+        products: [],
+        total: 0,
+      });
+    }
+
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const clearOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order não encontrada" });
+    }
+
+    if (order.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Acesso negado" });
+    }
+
+    // limpa todos os produtos
+    order.products = [];
+    order.total = 0;
+
+    await order.save();
+
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+

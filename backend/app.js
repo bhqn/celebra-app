@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/user", userRoutes);
 app.use("/products", productsRoute);
 
-app.use("/api/order", orderRoutes);
+app.use("/order", orderRoutes);
 
 //  Rota teste
 app.get("/", (req, res) => {

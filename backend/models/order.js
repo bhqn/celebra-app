@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
@@ -40,7 +41,16 @@ const orderSchema = new mongoose.Schema({
     default: "iniciado",
   },
 }, { timestamps: true });
+
+
+orderSchema.index(
+  { userId: 1, status: 1 },
+  { unique: true, partialFilterExpression: { status: "iniciado" } }
+);
+
+
 const Order = mongoose.model("Order", orderSchema);
+
 
 export default Order;
 

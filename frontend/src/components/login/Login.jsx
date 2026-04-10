@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../services/auth";
+import { api } from "../../services/api";
 import "./login.css";
-import { Link } from "react-router-dom";
 
 function Login() {
   const [form, setForm] = useState({
@@ -21,27 +21,32 @@ function Login() {
   const navigate = useNavigate();
 
   // Submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await login(form);
+  try {
+    // 1. LOGIN
+    const res = await login(form);
 
+    const token = res.data.token;
 
-    console.log("RESPOSTA COMPLETA:", res.data);
-    console.log("TOKEN JWT:", res.data.token);
-    console.log("USUÁRIO:", res.data.user);
+    localStorage.setItem("token", token);
 
-      localStorage.removeItem("orderId");
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      navigate("/");
+    // seta token no axios
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      alert("Login realizado!");
-    } catch (err) {
-      alert(err.response?.data?.message || "Erro no login");
-    }
-  };
+    // 2. ORDER
+    const orderRes = await api.get("/order/current");
+
+    localStorage.setItem("orderId", orderRes.data._id);
+
+    navigate("/");
+
+    alert("Login realizado!");
+  } catch (err) {
+    alert(err.response?.data?.message || "Erro no login");
+  }
+};
 
   return (
     <div className="login">

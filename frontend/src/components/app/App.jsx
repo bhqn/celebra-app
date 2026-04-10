@@ -11,6 +11,7 @@ import Login from "../login/Login";
 import Register from "../register/Register";
 import PrivateRoute from "../PrivateRoute";
 import { OrderProvider } from "../../contexts/OrderContext";
+import { api } from "../../services/api";
 
 import "./App.css";
 
@@ -34,6 +35,18 @@ function App() {
     setIsOpen(false);
     setSelectedItem(null);
   };
+
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    api.get("/order/current").then((res) => {
+      localStorage.setItem("orderId", res.data._id);
+    });
+  }
+}, []);
 
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && closePopup();
