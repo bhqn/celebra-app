@@ -6,10 +6,19 @@ const OrderContext = createContext(null);
 export function OrderProvider({ children }) {
   const [order, setOrder] = useState(null);
   const [orderId, setOrderId] = useState(localStorage.getItem("orderId"));
+  const [loading, setLoading] = useState(true);
 
   const clearOrder = async() => {
+    if (orderId) {
+      await api.delete(`/order/${orderId}/clear`);
+    }
 
-    await api.delete(`/order/${orderId}/clear`);
+    localStorage.removeItem("orderId");
+    setOrder(null);
+    setOrderId(null);
+  };
+
+  const resetOrder = () => {
     localStorage.removeItem("orderId");
     setOrder(null);
     setOrderId(null);
@@ -17,18 +26,27 @@ export function OrderProvider({ children }) {
 
   // 🔥 buscar order ao carregar
   useEffect(() => {
-    if (!orderId) return;
-
     async function fetchOrder() {
       try {
-        const res = await api.get(`/order/${orderId}`);
-        setOrder(res.data);
+        if (orderId) {
+          const res = await api.get(`/order/${orderId}`);
+          setOrder(res.data);
+        } else {
+          const res = await api.get("/order/current");
+          setOrder(res.data);
+          localStorage.setItem("orderId", res.data._id);
+          setOrderId(res.data._id);
+        }
       } catch (err) {
         console.error("Erro ao buscar order:", err);
 
         if (err.response?.status === 403 || err.response?.status === 404) {
-          clearOrder();
+          localStorage.removeItem("orderId");
+          setOrderId(null);
+          setOrder(null);
         }
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -89,6 +107,18 @@ export function OrderProvider({ children }) {
     }
   };
 
+  // ✅ atualizar order
+  const updateOrder = async (id, data) => {
+    try {
+      const res = await api.put(`/order/${id}`, data);
+      setOrder(res.data);
+      return res.data;
+    } catch (err) {
+      console.error("Erro ao atualizar order:", err);
+      return null;
+    }
+  };
+
   // ✅ update quantidade
   const updateQuantity = async (productId, quantity) => {
     try {
@@ -107,11 +137,14 @@ export function OrderProvider({ children }) {
       value={{
         order,
         orderId,
+        loading,
         createOrder,
+        updateOrder,
         addProduct,
         removeProduct,
         updateQuantity,
         clearOrder,
+        resetOrder,
       }}
     >
       {children}
@@ -124,3 +157,4 @@ export function useOrder() {
   if (!ctx) throw new Error("useOrder must be used inside OrderProvider");
   return ctx;
 }
+

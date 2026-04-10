@@ -8,9 +8,34 @@ import Info from "./Pages/informacoes/Info";
 import "./Main.css";
 import "./components/Stepper/Stepper.css";
 import Checkout from "./Pages/checkout/checkout.jsx";
+import { useEffect } from "react";
+import { api } from "../../services/api.js";
+import PartySummary from "./components/partySummary/PartySummary.jsx";
 
 export default function Main({ onOpen }) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const res = await api.get("/order/current");
+
+        if (res.data) {
+          // existe order iniciado
+          setCurrentStep(1); // step 1 (Informações)
+        }
+      } catch (err) {
+        console.log("Sem order ativa");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, []);
+
+  if (loading) return <p>Carregando...</p>;
 
   const next = () => {
     console.log("Avançando do step", currentStep);
@@ -33,6 +58,8 @@ export default function Main({ onOpen }) {
     },
   ];
 
+
+
   const isLastStep = currentStep === steps.length - 1;
 
   return (
@@ -42,6 +69,9 @@ export default function Main({ onOpen }) {
       <div className="main__content">
         {steps[currentStep].element}
       </div>
+
+      <PartySummary onEdit={() => setCurrentStep(0)}/>
+
 
       <div className="main__actions">
         {currentStep !== 0 && (

@@ -36,9 +36,15 @@ const handleSubmit = async (e) => {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     // 2. ORDER
-    const orderRes = await api.get("/order/current");
-
-    localStorage.setItem("orderId", orderRes.data._id);
+    try {
+      const orderRes = await api.get("/order/current");
+      localStorage.setItem("orderId", orderRes.data._id);
+    } catch (err) {
+      if (err.response?.status !== 404) {
+        throw err;
+      }
+      // sem pedido iniciado no momento, segue normalmente
+    }
 
     navigate("/");
 

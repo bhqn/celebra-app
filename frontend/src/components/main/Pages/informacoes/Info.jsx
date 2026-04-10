@@ -2,18 +2,19 @@ import { useState } from "react";
 import "./Info.css";
 import { useForm } from "react-hook-form";
 import { useOrder } from "../../../../contexts/OrderContext";
+import { useEffect } from "react";
 
 const EVENT_TYPES = [
-  { label: "Aniversário",      value: "Aniversário" },
-  { label: "Casamento",        value: "Casamento" },
-  { label: "Formatura",        value: "Formatura" },
-  { label: "Corporativo",      value: "Corporativo" },
+  { label: "Aniversário", value: "Aniversário" },
+  { label: "Casamento", value: "Casamento" },
+  { label: "Formatura", value: "Formatura" },
+  { label: "Corporativo", value: "Corporativo" },
   { label: "Confraternização", value: "Confraternização" },
-  { label: "+ Outro",             value: "outro" },
+  { label: "+ Outro", value: "outro" },
 ];
 
 function Info({ next }) {
-  const { createOrder, orderId } = useOrder();
+  const { createOrder, orderId, order, updateOrder } = useOrder();
 
   const {
     register,
@@ -22,6 +23,19 @@ function Info({ next }) {
     setValue,
     formState: { errors },
   } = useForm();
+
+useEffect(() => {
+  if (!order) return;
+
+  setValue("dataEvento", order.dataEvento);
+  setValue("horaInicio", order.horaInicio);
+  setValue("duracao", order.duracao);
+  setValue("tipoEvento", order.tipoEvento);
+  setValue("local", order.local);
+  setValue("convidados", order.convidados);
+
+  setLocation(order.local);
+}, [order]);
 
   const [location, setLocation] = useState("");
   const convidados = watch("convidados", 50);
@@ -41,7 +55,7 @@ function Info({ next }) {
       },
       () => {
         alert("Não foi possível obter a localização");
-      }
+      },
     );
   }
 
@@ -52,18 +66,26 @@ function Info({ next }) {
     const orderData = {
       ...data,
       tipoEvento: finalType,
-      products: [],
-      total: 0,
     };
 
-    if (!orderId) {
-      const createdOrder = await createOrder(orderData);
-      if (!createdOrder) {
-        return;
-      }
-    }
+    try {
+      if (!orderId) {
+        const createdOrder = await createOrder({
+          ...orderData,
+          products: [],
+          total: 0,
+        });
 
-    next();
+        if (!createdOrder) return;
+      } else {
+        // ✏️ atualiza
+        await updateOrder(orderId, orderData);
+      }
+
+      next();
+    } catch (err) {
+      console.log("Erro ao salvar order", err);
+    }
   }
 
   return (
@@ -118,7 +140,9 @@ function Info({ next }) {
           <label>Tipo de evento</label>
           <input
             type="hidden"
-            {...register("tipoEvento", { required: "Selecione um tipo de evento" })}
+            {...register("tipoEvento", {
+              required: "Selecione um tipo de evento",
+            })}
           />
           <div className="info__chips">
             {EVENT_TYPES.map(({ label, value }) => (
@@ -126,7 +150,9 @@ function Info({ next }) {
                 key={value}
                 type="button"
                 className={`info__chip ${selectedType === value ? "info__chip--active" : ""}`}
-                onClick={() => setValue("tipoEvento", value, { shouldValidate: true })}
+                onClick={() =>
+                  setValue("tipoEvento", value, { shouldValidate: true })
+                }
               >
                 {label}
               </button>
@@ -137,16 +163,23 @@ function Info({ next }) {
           )}
 
           {/* Campo extra para "Outro" */}
-          <div className={`info__custom-wrap ${selectedType === "outro" ? "info__custom-wrap--visible" : ""}`}>
+          <div
+            className={`info__custom-wrap ${selectedType === "outro" ? "info__custom-wrap--visible" : ""}`}
+          >
             <input
               type="text"
               placeholder="Qual tipo de evento?"
               {...register("tipoPersonalizado", {
-                required: selectedType === "outro" ? "Descreva o tipo de evento" : false,
+                required:
+                  selectedType === "outro"
+                    ? "Descreva o tipo de evento"
+                    : false,
               })}
             />
             {errors.tipoPersonalizado && (
-              <span className="info__error">{errors.tipoPersonalizado.message}</span>
+              <span className="info__error">
+                {errors.tipoPersonalizado.message}
+              </span>
             )}
           </div>
         </div>
@@ -160,8 +193,8 @@ function Info({ next }) {
             <input
               type="text"
               placeholder="Endereço ou lugar"
-              value={location}
               {...register("local", { required: true })}
+              value={location}
               onChange={(e) => {
                 setLocation(e.target.value);
                 setValue("local", e.target.value, { shouldValidate: true });
@@ -173,7 +206,14 @@ function Info({ next }) {
               onClick={usarLocalizacaoAtual}
               title="Usar localização atual"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <circle cx="12" cy="12" r="3" />
                 <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
               </svg>
@@ -205,7 +245,6 @@ function Info({ next }) {
             <span className="info__slider-value">{convidados}</span>
           </div>
         </div>
-
       </form>
     </div>
   );

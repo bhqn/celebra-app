@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useOrder } from "../../contexts/OrderContext";
 
 function Header({onOpen}) {
-  const { clearOrder } = useOrder();
+  const { resetOrder } = useOrder();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    clearOrder();
+    resetOrder();
     localStorage.removeItem("token"); 
     localStorage.removeItem("user");
     navigate("/login", { replace: true }); 

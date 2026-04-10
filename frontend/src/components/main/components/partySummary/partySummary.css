@@ -1,0 +1,58 @@
+.party-summary {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  
+  margin: auto;
+ 
+}
+
+.party__title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.party__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
+}
+
+.party__info {
+  font-size: 14px;
+  color: #555;
+ 
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.party-summary button {
+  margin-top: 10px;
+  padding: 10px 16px;
+  
+  color: gray;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.party__btn:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.party__content{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom:10px ;
+
+}

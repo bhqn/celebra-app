@@ -184,30 +184,19 @@ export const checkoutOrder = (req, res) => {
     });
 };
 
-//caso o order esteja no "iniciado", recupere o order
+// caso o order esteja no "iniciado", recupere o order
 export const getCurrentOrder  = async (req, res) => {
   try {
     const userId = req.user.id;
 
     // procura order em andamento
-    let order = await Order.findOne({
+    const order = await Order.findOne({
       userId,
       status: "iniciado",
     }).sort({ createdAt: -1 });
 
-    // se não existir, cria novo
     if (!order) {
-      order = await Order.create({
-        userId,
-        dataEvento: new Date(),
-        horaInicio: "00:00",
-        duracao: 0,
-        tipoEvento: "default",
-        local: "default",
-        convidados: 0,
-        products: [],
-        total: 0,
-      });
+      return res.status(404).json({ message: "Pedido não encontrado" });
     }
 
     res.status(200).json(order);
@@ -240,5 +229,19 @@ export const clearOrder = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+//atualizar a order
+
+ export const updateOrder = async (req, res) => {
+  const { id } = req.params;
+
+  const updated = await Order.findByIdAndUpdate(
+    id,
+    req.body,
+    { new: true }
+  );
+
+  res.json(updated);
 };
 
