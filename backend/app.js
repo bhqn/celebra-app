@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-
+import paymentRoutes from "./routes/paymentRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import productsRoute from "./routes/productsRoutes.js";
 
@@ -15,6 +15,7 @@ app.use(express.json());
 //  Rotas
 app.use("/user", userRoutes);
 app.use("/products", productsRoute);
+app.use("/api/payment", paymentRoutes);
 
 app.use("/order", orderRoutes);
 
@@ -22,5 +23,7 @@ app.use("/order", orderRoutes);
 app.get("/", (req, res) => {
   res.send("API rodando ");
 });
+
+console.log("🚀 APP.JS CARREGADO");
 
 export default app;

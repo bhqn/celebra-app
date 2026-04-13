@@ -168,7 +168,7 @@ export const checkoutOrder = (req, res) => {
         return res.status(404).json({ message: "Pedido não encontrado" });
       }
 
-      order.status = "pago";
+      order.status = "pendente";
       return order.save();
     })
     .then((updatedOrder) => {
