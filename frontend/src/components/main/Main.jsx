@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Stepper from "./components/Stepper/Stepper.jsx";
-import Food from "./Pages/food/Food.jsx";
-import Drinks from "./Pages/drinks/Drinks.jsx";
-import Struct from "./Pages/estrutura/Struct.jsx";
-import Fun from "./Pages/entreterimento/Fun.jsx";
-import Info from "./Pages/informacoes/Info.jsx";
+import Stepper from "./components/Stepper/Stepper";
+import Food from "./Pages/food/Food";
+import Drinks from "./Pages/drinks/Drinks";
+import Struct from "./Pages/estrutura/Struct";
+import Fun from "./Pages/entreterimento/Fun";
+import Info from "./Pages/informacoes/Info";
 import "./Main.css";
 import "./components/Stepper/Stepper.css";
 import Checkout from "./Pages/checkout/checkout.jsx";

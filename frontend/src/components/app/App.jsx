@@ -15,7 +15,11 @@ import { api } from "../../services/api";
 
 import "./App.css";
 
-const stripePromise = loadStripe("SUA_PUBLIC_KEY");
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+);
+
+console.log(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
   const [selectedItem, setSelectedItem] = useState(null);
