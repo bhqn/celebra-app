@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Stepper from "./components/Stepper/Stepper";
-import Food from "./Pages/food/Food";
-import Drinks from "./Pages/drinks/Drinks";
-import Struct from "./Pages/estrutura/Struct";
-import Fun from "./Pages/entreterimento/Fun";
-import Info from "./Pages/informacoes/Info";
+import Stepper from "./components/Stepper/Stepper.jsx";
+import Food from "./Pages/food/Food.jsx";
+import Drinks from "./Pages/drinks/Drinks.jsx";
+import Struct from "./Pages/estrutura/Struct.jsx";
+import Fun from "./Pages/entreterimento/Fun.jsx";
+import Info from "./Pages/informacoes/Info.jsx";
 import "./Main.css";
 import "./components/Stepper/Stepper.css";
 import Checkout from "./Pages/checkout/checkout.jsx";
@@ -15,6 +15,7 @@ import PartySummary from "./components/partySummary/PartySummary.jsx";
 export default function Main({ onOpen }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -53,12 +54,15 @@ export default function Main({ onOpen }) {
     {
       key: "pay",
       label: "Pagamento",
-      element: <Checkout onConfirm={() => console.log("pagamento confirmado!")} />,
+      element: (
+        <Checkout
+          onConfirm={() => console.log("pagamento confirmado!")}
+          setPaymentLoading={setPaymentLoading}
+        />
+      ),
       customClass: "stepper__label--ajustado",
     },
   ];
-
-
 
   const isLastStep = currentStep === steps.length - 1;
 
@@ -66,12 +70,9 @@ export default function Main({ onOpen }) {
     <div className="main__wizard">
       <Stepper steps={steps} currentStep={currentStep} />
 
-      <div className="main__content">
-        {steps[currentStep].element}
-      </div>
+      <div className="main__content">{steps[currentStep].element}</div>
 
-      <PartySummary onEdit={() => setCurrentStep(0)}/>
-
+      <PartySummary onEdit={() => setCurrentStep(0)} />
 
       <div className="main__actions">
         {currentStep !== 0 && (
@@ -96,8 +97,9 @@ export default function Main({ onOpen }) {
             className="main__next_btn"
             type="submit"
             form="payment-form"
+            disabled={paymentLoading}
           >
-            Confirmar pagamento
+            {paymentLoading ? "Processando..." : "Pagar agora"}
           </button>
         )}
       </div>

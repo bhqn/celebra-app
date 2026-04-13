@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import "./PaymentForm.css";
+import { useOrder } from "../../../../../../contexts/OrderContext";
 
-function PaymentForm({ onConfirm }) {
+function PaymentForm({ onConfirm, setPaymentLoading  }) {
   const stripe = useStripe();
   const elements = useElements();
   const [form, setForm] = useState({
@@ -11,6 +12,7 @@ function PaymentForm({ onConfirm }) {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { order } = useOrder();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,44 +47,72 @@ function PaymentForm({ onConfirm }) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+  setPaymentLoading(true);
 
-    const cardElement = elements.getElement(CardElement);
-    const { error: stripeError, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-      billing_details: {
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        address: {
-          line1: form.address,
-          city: form.city,
-          state: form.state,
-          postal_code: form.zip,
-          country: "BR",
+  const cardElement = elements.getElement(CardElement);
+
+  try {
+    // 1. chama seu backend (AQUI entra a URL que você perguntou)
+    const response = await fetch(
+      "http://localhost:5000/api/payment/create-payment-intent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      },
-    });
+        body: JSON.stringify({
+          orderId: order._id,
+        }),
+      }
+    );
+
+    const { clientSecret } = await response.json();
+
+    // 2. confirma pagamento no Stripe
+    const { error: stripeError, paymentIntent } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            address: {
+              line1: form.address,
+              city: form.city,
+              state: form.state,
+              postal_code: form.zip,
+              country: "BR",
+            },
+          },
+        },
+      });
 
     setLoading(false);
+    setPaymentLoading(false);
+
 
     if (stripeError) {
       setError(stripeError.message);
       return;
     }
 
-    console.log("Payload para o backend:", {
-      paymentMethodId: paymentMethod.id,
-      cpf: form.cpf,
-      ...form,
-    });
+    if (paymentIntent.status === "succeeded") {
+      console.log("Pagamento aprovado 🎉");
 
-    onConfirm?.();
-  };
+      // aqui você pode finalizar pedido
+      onConfirm?.();
+    }
+  } catch (err) {
+    setLoading(false);
+    setPaymentLoading(false);
+    setError("Erro ao processar pagamento");
+  }
+};
 
   return (
     <div className="payment">
