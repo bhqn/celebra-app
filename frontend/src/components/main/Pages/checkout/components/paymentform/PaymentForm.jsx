@@ -1,19 +1,15 @@
 import { useState } from "react";
-import {
-  CardElement,
-  useStripe,
-  useElements,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
-} from "@stripe/react-stripe-js";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
 import "./PaymentForm.css";
 import { useOrder } from "../../../../../../contexts/OrderContext";
+import { useStep } from "../../../../../../contexts/StepContext";
 import { api } from "../../../../../../services/api";
 
 function PaymentForm({ onConfirm, setPaymentLoading }) {
   const stripe = useStripe();
   const elements = useElements();
+
   const [form, setForm] = useState({
     name: "",
     cpf: "",
@@ -24,10 +20,12 @@ function PaymentForm({ onConfirm, setPaymentLoading }) {
     state: "",
     zip: "",
   });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { order } = useOrder();
 
+  const { order, resetOrder } = useOrder();
+  const { setCurrentStep } = useStep();
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -70,14 +68,12 @@ function PaymentForm({ onConfirm, setPaymentLoading }) {
     const cardElement = elements.getElement(CardElement);
 
     try {
-      // 1. chama seu backend (AQUI entra a URL que você perguntou)
       const response = await api.post("/api/payment/create-payment-intent", {
         orderId: order._id,
       });
 
       const { clientSecret } = response.data;
 
-      // 2. confirma pagamento no Stripe
       const { error: stripeError, paymentIntent } =
         await stripe.confirmCardPayment(clientSecret, {
           payment_method: {
@@ -108,14 +104,19 @@ function PaymentForm({ onConfirm, setPaymentLoading }) {
       if (paymentIntent.status === "succeeded") {
         console.log("Pagamento aprovado 🎉");
 
-        // ATUALIZA STATUS DO PEDIDO NO BACKEND
         await api.patch(`/order/${order._id}/pay`);
-        // aqui você pode finalizar pedido
+       
+        // volta pro step inicial
+        setCurrentStep(0);
+
+        resetOrder(); 
+
         onConfirm?.();
       }
     } catch (err) {
       setLoading(false);
       setPaymentLoading(false);
+
       console.log("ERRO COMPLETO:", err);
       setError(err.message || "Erro ao processar pagamento");
     }
