@@ -19,7 +19,7 @@ const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 );
 
-console.log(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
 
 function App() {
   const [selectedItem, setSelectedItem] = useState(null);

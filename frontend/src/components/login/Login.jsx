@@ -10,6 +10,11 @@ function Login() {
     password: "",
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
   // Atualiza os inputs
   const handleChange = (e) => {
     setForm({
@@ -21,38 +26,48 @@ function Login() {
   const navigate = useNavigate();
 
   // Submit
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    // 1. LOGIN
-    const res = await login(form);
-
-    const token = res.data.token;
-
-    localStorage.setItem("token", token);
-
-    // seta token no axios
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-    // 2. ORDER
     try {
-      const orderRes = await api.get("/order/current");
-      localStorage.setItem("orderId", orderRes.data._id);
-    } catch (err) {
-      if (err.response?.status !== 404) {
-        throw err;
+      // 1. LOGIN
+      const res = await login(form);
+
+      const token = res.data.token;
+
+      localStorage.setItem("token", token);
+
+      // seta token no axios
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      // 2. ORDER
+      try {
+        const orderRes = await api.get("/order/current");
+        localStorage.setItem("orderId", orderRes.data._id);
+      } catch (err) {
+        if (err.response?.status !== 404) {
+          throw err;
+        }
+        // sem pedido iniciado no momento, segue normalmente
       }
-      // sem pedido iniciado no momento, segue normalmente
+
+      navigate("/");
+    } catch (err) {
+      console.log(err.response?.data);
+
+  const validation = err.response?.data?.validation?.body;
+
+  const field = validation?.keys?.[0];
+  const message =
+    validation?.message || err.response?.data?.message;
+
+  setErrors({
+    email: field === "email" ? message : "",
+    password: field === "password" ? message : "",
+    general: !field ? message : "",
+  });
     }
-
-    navigate("/");
-
-    alert("Login realizado!");
-  } catch (err) {
-    alert(err.response?.data?.message || "Erro no login");
-  }
-};
+  };
 
   return (
     <div className="login">
@@ -67,6 +82,7 @@ const handleSubmit = async (e) => {
             value={form.email}
             onChange={handleChange}
           />
+          {errors.email && <span className="login__error">{errors.email}</span>}
 
           <input
             className="login__input"
@@ -76,15 +92,23 @@ const handleSubmit = async (e) => {
             value={form.password}
             onChange={handleChange}
           />
+          {errors.password && (
+            <span className="login__error">{errors.password}</span>
+          )}
+              {errors.general && (
+  <span className="login__error">{errors.general}</span>
+)}
 
           <button className="login__button" type="submit">
             Entrar
           </button>
+
           <p className="login__text">
             Não tem conta?{" "}
             <Link to="/register" className="login__link">
               Cadastre-se
             </Link>
+        
           </p>
         </form>
       </div>

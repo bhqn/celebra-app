@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  background: linear-gradient(180deg, #E84747 0%, #db4141 100%);  
   font-family: Arial, sans-serif;
 }
 
@@ -48,7 +48,7 @@
 .login__button {
   margin-top: 10px;
   padding: 12px;
-  background: #2563eb;
+  background: linear-gradient(180deg, #E84747 0%, #db4141 100%);  
   color: white;
   font-weight: bold;
   border: none;
@@ -58,7 +58,7 @@
 }
 
 .login__button:hover {
-  background: #1d4ed8;
+  background: darkred; 
 }
 
 .login__text {
@@ -76,4 +76,11 @@
 
 .login__link:hover {
   text-decoration: underline;
+}
+
+.login__error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: -6px;
+  margin-bottom: 4px;
 }

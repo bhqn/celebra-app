@@ -66,7 +66,7 @@ export const login = (req, res) => {
     })
     .then((isMatch) => {
       if (!isMatch) {
-        return res.status(400).json({ message: "Senha inválida" });
+        return res.status(400).json({ message: "E-mail ou Senha inválida" });
       }
 
       const token = jwt.sign(

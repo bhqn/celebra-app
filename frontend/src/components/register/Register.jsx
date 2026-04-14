@@ -2,6 +2,7 @@ import { useState } from "react";
 import { register } from "../../services/auth";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Register() {
   const [form, setForm] = useState({
@@ -90,6 +91,7 @@ function Register() {
 
           <div className="register__section">
             <h3 className="register__subtitle">Endereço</h3>
+             <div className="register__address-grid">
 
             <input
               className="register__input"
@@ -147,11 +149,21 @@ function Register() {
               onChange={handleChange}
             />
           </div>
+          </div>
+
+              <p className="login__text">
+            Já possui conta?{" "}
+            <Link to="/login" className="login__link">
+              Vá para o Login
+            </Link>
+          </p>
+         
 
           <button className="register__button" type="submit">
             Cadastrar
           </button>
         </form>
+        
       </div>
     </div>
   );
