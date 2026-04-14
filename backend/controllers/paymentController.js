@@ -16,6 +16,8 @@ export const createPaymentIntentController = async (req, res) => {
       clientSecret: paymentIntent.client_secret,
     });
 
+    console.log("USER:", req.user);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

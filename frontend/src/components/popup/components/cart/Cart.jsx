@@ -1,8 +1,10 @@
 import { useOrder } from "../../../../contexts/OrderContext";
 import "./Cart.css";
 import { formatPrice } from "../../../../utils/formatPrice";
+import { useStep } from "../../../../contexts/StepContext";
 
 function Cart({ isCheckout = false }) {
+   const { goToPayment } = useStep();
   const {
     order,
     removeProduct,
@@ -134,7 +136,7 @@ function Cart({ isCheckout = false }) {
           {!isCheckout && (
             <div className="cart__actions">
               <button onClick={clearOrder}>Limpar</button>
-              <button>Finalizar</button>
+              <button  onClick={goToPayment}>Finalizar</button>
             </div>
           )}
         </>

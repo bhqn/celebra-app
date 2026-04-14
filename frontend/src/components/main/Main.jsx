@@ -11,11 +11,13 @@ import Checkout from "./Pages/checkout/checkout.jsx";
 import { useEffect } from "react";
 import { api } from "../../services/api.js";
 import PartySummary from "./components/partySummary/PartySummary.jsx";
+import { useStep } from "../../contexts/StepContext";
 
 export default function Main({ onOpen }) {
-  const [currentStep, setCurrentStep] = useState(0);
+  const { currentStep, setCurrentStep } = useStep();
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -63,6 +65,11 @@ export default function Main({ onOpen }) {
       customClass: "stepper__label--ajustado",
     },
   ];
+
+  const goToPayment = () => {
+  const payIndex = steps.findIndex(step => step.key === "pay");
+  setCurrentStep(payIndex);
+};
 
   const isLastStep = currentStep === steps.length - 1;
 
