@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  CardElement,
+  useStripe,
+  useElements,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
+} from "@stripe/react-stripe-js";
 import "./PaymentForm.css";
 import { useOrder } from "../../../../../../contexts/OrderContext";
 import { api } from "../../../../../../services/api";
@@ -64,14 +71,11 @@ function PaymentForm({ onConfirm, setPaymentLoading }) {
 
     try {
       // 1. chama seu backend (AQUI entra a URL que você perguntou)
-    const response = await api.post(
-  "/api/payment/create-payment-intent",
-  {
-    orderId: order._id,
-  }
-);
+      const response = await api.post("/api/payment/create-payment-intent", {
+        orderId: order._id,
+      });
 
-const { clientSecret } = response.data;
+      const { clientSecret } = response.data;
 
       // 2. confirma pagamento no Stripe
       const { error: stripeError, paymentIntent } =
@@ -104,6 +108,8 @@ const { clientSecret } = response.data;
       if (paymentIntent.status === "succeeded") {
         console.log("Pagamento aprovado 🎉");
 
+        // ATUALIZA STATUS DO PEDIDO NO BACKEND
+        await api.patch(`/order/${order._id}/pay`);
         // aqui você pode finalizar pedido
         onConfirm?.();
       }

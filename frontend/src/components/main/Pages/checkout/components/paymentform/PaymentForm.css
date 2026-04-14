@@ -243,6 +243,31 @@
   color: var(--color-text-muted);
 }
 
+.payment__card-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.payment__card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.payment__card-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payment__card-field .StripeElement {
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
 @media (max-width: 560px) {
   .payment {
     margin: 0;
@@ -265,4 +290,7 @@
   .payment__field--short {
     grid-column: 1 / -1;
   }
+
 }
+
+

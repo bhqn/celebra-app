@@ -245,3 +245,24 @@ export const clearOrder = async (req, res) => {
   res.json(updated);
 };
 
+//modificar status para pago
+
+export const markOrderAsPaid = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Pedido não encontrado" });
+    }
+
+    order.status = "pago";
+    await order.save();
+
+    return res.json(order);
+  } catch (err) {
+    return res.status(500).json({ message: "Erro ao atualizar pedido" });
+  }
+};
+
