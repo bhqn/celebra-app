@@ -131,7 +131,7 @@
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  -webkit-appearance: none;
+
 }
 
 .payment__input::placeholder {
