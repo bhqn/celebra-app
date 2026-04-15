@@ -6,9 +6,10 @@ import { useOrder } from "../../../../../../contexts/OrderContext";
 import { useStep } from "../../../../../../contexts/StepContext";
 import { api } from "../../../../../../services/api";
 
-function PaymentForm({ onConfirm, setPaymentLoading }) {
+function PaymentForm({ onSuccess, setPaymentLoading }) {
   const stripe = useStripe();
   const elements = useElements();
+
 
   const [form, setForm] = useState({
     name: "",
@@ -105,6 +106,9 @@ function PaymentForm({ onConfirm, setPaymentLoading }) {
         console.log("Pagamento aprovado 🎉");
 
         await api.patch(`/order/${order._id}/pay`);
+          onSuccess?.();
+
+      
        
         // volta pro step inicial
         setCurrentStep(0);

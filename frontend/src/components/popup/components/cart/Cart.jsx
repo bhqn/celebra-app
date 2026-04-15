@@ -3,7 +3,7 @@ import "./Cart.css";
 import { formatPrice } from "../../../../utils/formatPrice";
 import { useStep } from "../../../../contexts/StepContext";
 
-function Cart({ isCheckout = false }) {
+function Cart({ isCheckout = false , onClose}) {
    const { goToPayment } = useStep();
   const {
     order,
@@ -136,7 +136,12 @@ function Cart({ isCheckout = false }) {
           {!isCheckout && (
             <div className="cart__actions">
               <button onClick={clearOrder}>Limpar</button>
-              <button  onClick={goToPayment}>Finalizar</button>
+              <button onClick={() => {
+  goToPayment();
+  onClose();
+}}>
+  Finalizar
+</button>
             </div>
           )}
         </>

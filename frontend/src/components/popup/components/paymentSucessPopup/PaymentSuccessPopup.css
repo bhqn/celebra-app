@@ -1,0 +1,22 @@
+.success__content {
+  text-align: center;
+  padding: 20px;
+}
+
+.success__content h2 {
+  margin-bottom: 10px;
+}
+
+.success__content button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  background: #28a745;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.success__content button:hover {
+  background: #218838;
+}

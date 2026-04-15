@@ -12,16 +12,14 @@ import Register from "../register/Register";
 import PrivateRoute from "../PrivateRoute";
 import { OrderProvider } from "../../contexts/OrderContext";
 import { api } from "../../services/api";
+import PaymentSuccessContent from "../popup/components/paymentSucessPopup/PaymentSucessPopup";
 
 import "./App.css";
 
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-);
-
-
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
+  const [showSuccess, setShowSuccess] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,16 +39,16 @@ function App() {
   };
 
   useEffect(() => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    if (token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-    api.get("/order/current").then((res) => {
-      localStorage.setItem("orderId", res.data._id);
-    });
-  }
-}, []);
+      api.get("/order/current").then((res) => {
+        localStorage.setItem("orderId", res.data._id);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && closePopup();
@@ -61,7 +59,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* públicas */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -71,18 +68,28 @@ function App() {
           path="/"
           element={
             <PrivateRoute>
-              <OrderProvider> 
+              <OrderProvider>
                 <Elements stripe={stripePromise}>
                   <Header onOpen={openPopup} onOpenCart={openCart} />
-                  <Main onOpen={openPopup} />
+                  <Main
+                    onOpen={openPopup}
+                    onSuccess={() => setShowSuccess(true)}
+                  />
 
                   {isOpen && (
                     <Popup onClose={closePopup}>
                       {selectedItem ? (
                         <PopupIten {...selectedItem} onClose={closePopup} />
                       ) : (
-                        <Cart />
+                        <Cart onClose={closePopup} />
                       )}
+                    </Popup>
+                  )}
+                  {showSuccess && (
+                    <Popup onClose={() => setShowSuccess(false)}>
+                      <PaymentSuccessContent
+                        onClose={() => setShowSuccess(false)}
+                      />
                     </Popup>
                   )}
                 </Elements>
@@ -90,7 +97,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
       </Routes>
     </BrowserRouter>
   );

@@ -4,7 +4,7 @@ import "./checkout.css";
 import PartySummary from "./components/partySummary/PartySummary";
 
 
-function Checkout({ onConfirm, setPaymentLoading, onEdit }) {
+function Checkout({ onSuccess, setPaymentLoading, onEdit }) {
   return (
     <div className="checkout__content">
       <div className="checkout__cart">
@@ -13,7 +13,7 @@ function Checkout({ onConfirm, setPaymentLoading, onEdit }) {
       </div>
       <div className="checkout__payment">
         <PaymentForm
-          onConfirm={onConfirm}
+          onSuccess={onSuccess}
           setPaymentLoading={setPaymentLoading}
         />
       </div>

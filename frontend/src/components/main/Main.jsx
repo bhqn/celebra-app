@@ -13,11 +13,11 @@ import { api } from "../../services/api.js";
 import PartySummary from "./Pages/checkout/components/partySummary/PartySummary.jsx";
 import { useStep } from "../../contexts/StepContext";
 
-export default function Main({ onOpen }) {
+
+export default function Main({ onOpen, onSuccess }) {
   const { currentStep, setCurrentStep } = useStep();
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
-  
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -58,7 +58,7 @@ export default function Main({ onOpen }) {
       label: "Pagamento",
       element: (
         <Checkout
-          onConfirm={() => console.log("pagamento confirmado!")}
+          onSuccess={onSuccess}
           setPaymentLoading={setPaymentLoading}
           onEdit={() => setCurrentStep(0)}
         />
@@ -68,9 +68,9 @@ export default function Main({ onOpen }) {
   ];
 
   const goToPayment = () => {
-  const payIndex = steps.findIndex(step => step.key === "pay");
-  setCurrentStep(payIndex);
-};
+    const payIndex = steps.findIndex((step) => step.key === "pay");
+    setCurrentStep(payIndex);
+  };
 
   const isLastStep = currentStep === steps.length - 1;
 
@@ -79,8 +79,6 @@ export default function Main({ onOpen }) {
       <Stepper steps={steps} currentStep={currentStep} />
 
       <div className="main__content">{steps[currentStep].element}</div>
-
-     
 
       <div className="main__actions">
         {currentStep !== 0 && (
