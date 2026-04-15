@@ -1,8 +1,10 @@
-import { useState } from "react";
-import "./Info.css";
-import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import "./Info.css"
+import { useForm, Controller } from "react-hook-form";
 import { useOrder } from "../../../../contexts/OrderContext";
-import { useEffect } from "react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const EVENT_TYPES = [
   { label: "Aniversário", value: "Aniversário" },
@@ -21,47 +23,57 @@ function Info({ next }) {
     handleSubmit,
     watch,
     setValue,
+    control,
     formState: { errors },
   } = useForm();
 
-useEffect(() => {
-  if (!order) return;
-
-  setValue("dataEvento", order.dataEvento);
-  setValue("horaInicio", order.horaInicio);
-  setValue("duracao", order.duracao);
-  setValue("tipoEvento", order.tipoEvento);
-  setValue("local", order.local);
-  setValue("convidados", order.convidados);
-
-  setLocation(order.local);
-}, [order]);
-
   const [location, setLocation] = useState("");
+
   const convidados = watch("convidados", 50);
   const selectedType = watch("tipoEvento");
+
+  useEffect(() => {
+    if (!order) return;
+
+    setValue("dataEvento", order.dataEvento ? new Date(order.dataEvento) : null);
+    setValue("horaInicio", order.horaInicio);
+    setValue("duracao", order.duracao);
+    setValue("tipoEvento", order.tipoEvento);
+    setValue("local", order.local);
+    setValue("convidados", order.convidados);
+
+    setLocation(order.local || "");
+  }, [order, setValue]);
 
   function usarLocalizacaoAtual() {
     if (!navigator.geolocation) {
       alert("Geolocalização não suportada no navegador");
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         const loc = `Lat: ${latitude.toFixed(5)}, Long: ${longitude.toFixed(5)}`;
+
         setLocation(loc);
-        setValue("local", loc);
+        setValue("local", loc, { shouldValidate: true });
       },
       () => {
         alert("Não foi possível obter a localização");
-      },
+      }
     );
   }
 
+  const hoje = new Date();
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
+
   async function onSubmit(data) {
     const finalType =
-      data.tipoEvento === "outro" ? data.tipoPersonalizado : data.tipoEvento;
+      data.tipoEvento === "outro"
+        ? data.tipoPersonalizado
+        : data.tipoEvento;
 
     const orderData = {
       ...data,
@@ -78,7 +90,6 @@ useEffect(() => {
 
         if (!createdOrder) return;
       } else {
-        // ✏️ atualiza
         await updateOrder(orderId, orderData);
       }
 
@@ -100,19 +111,41 @@ useEffect(() => {
           <p>Preencha as informações abaixo</p>
         </div>
 
-        {/* Data */}
+        {/* DATA */}
         <div className="info__field">
           <label>Data do evento</label>
-          <input
-            type="date"
-            {...register("dataEvento", { required: "A data é obrigatória" })}
+
+          <Controller
+            control={control}
+            name="dataEvento"
+            rules={{ required: "A data é obrigatória" }}
+            render={({ field, fieldState }) => (
+              <div>
+                <DatePicker
+                 calendarClassName="custom-calendar"
+                  selected={field.value  ? new Date(field.value) : null} 
+                  onChange={(date) => {
+                    field.onChange(date);
+                    setValue("dataEvento", date, { shouldValidate: true });
+                  }}
+                  minDate={hoje}
+                  maxDate={maxDate}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="data do evento"
+                  className="info__datepicker"
+                />
+
+                {fieldState.error && (
+                  <span className="info__error">
+                    {fieldState.error.message}
+                  </span>
+                )}
+              </div>
+            )}
           />
-          {errors.dataEvento && (
-            <span className="info__error">{errors.dataEvento.message}</span>
-          )}
         </div>
 
-        {/* Horário */}
+        {/* HORÁRIO */}
         <div className="info__time">
           <div className="info__field">
             <label>Início</label>
@@ -121,6 +154,7 @@ useEffect(() => {
               {...register("horaInicio", { required: true })}
             />
           </div>
+
           <div className="info__field">
             <label>Duração (horas)</label>
             <input
@@ -135,21 +169,25 @@ useEffect(() => {
 
         <hr className="info__divider" />
 
-        {/* Tipo de evento — chips */}
+        {/* TIPO DE EVENTO */}
         <div className="info__field">
           <label>Tipo de evento</label>
+
           <input
             type="hidden"
             {...register("tipoEvento", {
               required: "Selecione um tipo de evento",
             })}
           />
+
           <div className="info__chips">
             {EVENT_TYPES.map(({ label, value }) => (
               <button
                 key={value}
                 type="button"
-                className={`info__chip ${selectedType === value ? "info__chip--active" : ""}`}
+                className={`info__chip ${
+                  selectedType === value ? "info__chip--active" : ""
+                }`}
                 onClick={() =>
                   setValue("tipoEvento", value, { shouldValidate: true })
                 }
@@ -158,37 +196,37 @@ useEffect(() => {
               </button>
             ))}
           </div>
+
           {errors.tipoEvento && (
-            <span className="info__error">{errors.tipoEvento.message}</span>
+            <span className="info__error">
+              {errors.tipoEvento.message}
+            </span>
           )}
 
-          {/* Campo extra para "Outro" */}
-          <div
-            className={`info__custom-wrap ${selectedType === "outro" ? "info__custom-wrap--visible" : ""}`}
-          >
+          {selectedType === "outro" && (
             <input
+              className="info__input_hidden"
               type="text"
               placeholder="Qual tipo de evento?"
               {...register("tipoPersonalizado", {
-                required:
-                  selectedType === "outro"
-                    ? "Descreva o tipo de evento"
-                    : false,
+                required: "Descreva o tipo de evento",
               })}
             />
-            {errors.tipoPersonalizado && (
-              <span className="info__error">
-                {errors.tipoPersonalizado.message}
-              </span>
-            )}
-          </div>
+          )}
+
+          {errors.tipoPersonalizado && (
+            <span className="info__error">
+              {errors.tipoPersonalizado.message}
+            </span>
+          )}
         </div>
 
         <hr className="info__divider" />
 
-        {/* Local */}
+        {/* LOCAL */}
         <div className="info__field">
           <label>Local</label>
+
           <div className="info__location-wrap">
             <input
               type="text"
@@ -197,42 +235,28 @@ useEffect(() => {
               value={location}
               onChange={(e) => {
                 setLocation(e.target.value);
-                setValue("local", e.target.value, { shouldValidate: true });
+                setValue("local", e.target.value, {
+                  shouldValidate: true,
+                });
               }}
             />
+
             <button
-              className="info__location-icon-btn"
               type="button"
               onClick={usarLocalizacaoAtual}
-              title="Usar localização atual"
+              className="info__location-icon-btn"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="3" />
-                <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-              </svg>
+              📍
             </button>
           </div>
-          <button
-            className="info__btn_location"
-            type="button"
-            onClick={usarLocalizacaoAtual}
-          >
-            Usar localização atual
-          </button>
         </div>
 
         <hr className="info__divider" />
 
-        {/* Convidados */}
+        {/* CONVIDADOS */}
         <div className="info__field">
           <label>Número de convidados</label>
+
           <div className="info__slider-row">
             <input
               type="range"
@@ -242,7 +266,10 @@ useEffect(() => {
               defaultValue={50}
               {...register("convidados")}
             />
-            <span className="info__slider-value">{convidados}</span>
+
+            <span className="info__slider-value">
+              {convidados}
+            </span>
           </div>
         </div>
       </form>

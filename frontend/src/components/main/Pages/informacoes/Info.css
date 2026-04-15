@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap');
- 
+
 /* Reset */
 * {
   box-sizing: border-box;
 }
- 
+
 /* Container */
 .info {
   margin-top: 30px;
@@ -15,42 +15,39 @@
   justify-content: center;
   font-family: 'DM Sans', system-ui, sans-serif;
 }
- 
+
 /* Card */
 .info__form {
   margin-top: 30px;
   width: 100%;
   max-width: 380px;
-
-
   display: flex;
   flex-direction: column;
-
 }
- 
+
 /* Header */
 .info__header {
   margin-bottom: 28px;
 }
- 
+
 .info__header h2 {
   font-size: 20px;
   font-weight: 600;
   color: #111;
   margin: 0 0 4px;
 }
- 
+
 .info__header p {
   font-size: 13px;
   color: #999;
   margin: 0;
 }
- 
+
 /* Field wrapper */
 .info__field {
   margin-bottom: 20px;
 }
- 
+
 .info__field label {
   display: block;
   font-size: 11px;
@@ -60,7 +57,7 @@
   color: #aaa;
   margin-bottom: 10px;
 }
- 
+
 /* Inputs gerais */
 .info__field input[type="text"],
 .info__field input[type="date"],
@@ -77,12 +74,79 @@
   outline: none;
   transition: border-color 0.18s, background 0.18s;
 }
- 
+
 .info__field input:focus {
   border-color: #E84747;
   background: #fff;
 }
- 
+
+/* DatePicker input */
+.info__datepicker {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #ebebeb;
+  background: #fafafa;
+  font-size: 14px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: #111;
+  outline: none;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.info__datepicker:focus {
+  border-color: #E84747;
+  background: #fff;
+}
+
+/* Calendar container */
+.react-datepicker {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  
+}
+
+/* Header calendar */
+.react-datepicker__header {
+  background: #E84747;
+  border-bottom: none;
+  padding: 14px 12px;
+}
+
+/* Month text */
+.react-datepicker__current-month {
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Navigation arrows */
+.react-datepicker__navigation-icon::before {
+  border-color: #fff;
+}
+
+/* Day hover */
+.react-datepicker__day:hover {
+  background-color: rgba(232, 71, 71, 0.12);
+  border-radius: 10px;
+}
+
+/* Selected day */
+.react-datepicker__day--selected {
+  background-color: #E84747 !important;
+  border-radius: 10px;
+  color: #fff !important;;
+}
+
+/* Today highlight */
+.react-datepicker__day--today {
+  font-weight: 700;
+  color: #E84747;
+}
+
 /* Horário — 2 colunas */
 .info__time {
   display: grid;
@@ -90,25 +154,25 @@
   gap: 12px;
   margin-bottom: 0;
 }
- 
+
 .info__time .info__field {
   margin-bottom: 20px;
 }
- 
+
 /* Divider */
 .info__divider {
   border: none;
   border-top: 1px solid #f0f0f0;
   margin: 0 0 20px;
 }
- 
-/* Chips de tipo de evento */
+
+/* Chips */
 .info__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
- 
+
 .info__chip {
   padding: 8px 16px;
   border-radius: 50px;
@@ -118,24 +182,28 @@
   font-family: 'DM Sans', system-ui, sans-serif;
   color: #666;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: 0.15s;
   user-select: none;
 }
- 
+
 .info__chip:hover {
   border-color: #E84747;
   color: #E84747;
   background: #fff8f8;
 }
- 
+
 .info__chip--active {
+  
   border-color: #E84747;
   background: #E84747;
   color: #fff;
   font-weight: 500;
 }
- 
-/* Campo "Outro" — animação de entrada */
+.info__input_hidden{
+  margin-top: 5px;
+}
+
+/* Campo "Outro" */
 .info__custom-wrap {
   overflow: hidden;
   max-height: 0;
@@ -143,22 +211,22 @@
   margin-top: 0;
   transition: max-height 0.28s ease, opacity 0.22s ease, margin-top 0.22s ease;
 }
- 
+
 .info__custom-wrap--visible {
   max-height: 70px;
   opacity: 1;
   margin-top: 10px;
 }
- 
-/* Local — ícone dentro do input */
+
+/* Local */
 .info__location-wrap {
   position: relative;
 }
- 
+
 .info__location-wrap input {
   padding-right: 44px !important;
 }
- 
+
 .info__location-icon-btn {
   position: absolute;
   right: 12px;
@@ -168,23 +236,15 @@
   border: none;
   cursor: pointer;
   padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #ccc;
   transition: color 0.18s;
 }
- 
+
 .info__location-icon-btn:hover {
   color: #E84747;
 }
- 
-.info__location-icon-btn svg {
-  width: 18px;
-  height: 18px;
-}
- 
-/* Texto de fallback "Usar localização atual" */
+
+/* Botão localização */
 .info__btn_location {
   margin-top: 6px;
   background: none;
@@ -197,18 +257,18 @@
   font-family: 'DM Sans', system-ui, sans-serif;
   transition: color 0.18s;
 }
- 
+
 .info__btn_location:hover {
   color: #E84747;
 }
- 
+
 /* Slider */
 .info__slider-row {
   display: flex;
   align-items: center;
   gap: 14px;
 }
- 
+
 .info__slider-row input[type="range"] {
   flex: 1;
   -webkit-appearance: none;
@@ -218,10 +278,9 @@
   background: #eee;
   outline: none;
   border: none;
-  padding: 0;
   accent-color: #E84747;
 }
- 
+
 .info__slider-row input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 20px;
@@ -230,13 +289,9 @@
   background: #E84747;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(232, 71, 71, 0.35);
-  transition: transform 0.15s;
 }
- 
-.info__slider-row input[type="range"]::-webkit-slider-thumb:active {
-  transform: scale(1.15);
-}
- 
+
+/* Value */
 .info__slider-value {
   font-family: 'DM Mono', monospace;
   font-size: 14px;
@@ -245,15 +300,25 @@
   min-width: 42px;
   text-align: right;
 }
- 
-/* Erro de validação */
+
+/* Error */
 .info__error {
   display: block;
   font-size: 11px;
   color: #E84747;
   margin-top: 5px;
 }
- 
+
+.info .react-datepicker__header {
+  background-color: #E84747 !important;
+  border-bottom: 1px solid #fff !important;
+}
+
+
+
+.custom-calendar .react-datepicker__current-month {
+  color: #fff !important;
+}
 /* Responsivo */
 @media (max-width: 400px) {
   .info__form {
