@@ -10,7 +10,7 @@ import "./components/Stepper/Stepper.css";
 import Checkout from "./Pages/checkout/checkout.jsx";
 import { useEffect } from "react";
 import { api } from "../../services/api.js";
-import PartySummary from "./components/partySummary/PartySummary.jsx";
+import PartySummary from "./Pages/checkout/components/partySummary/PartySummary.jsx";
 import { useStep } from "../../contexts/StepContext";
 
 export default function Main({ onOpen }) {
@@ -60,6 +60,7 @@ export default function Main({ onOpen }) {
         <Checkout
           onConfirm={() => console.log("pagamento confirmado!")}
           setPaymentLoading={setPaymentLoading}
+          onEdit={() => setCurrentStep(0)}
         />
       ),
       customClass: "stepper__label--ajustado",
@@ -79,7 +80,7 @@ export default function Main({ onOpen }) {
 
       <div className="main__content">{steps[currentStep].element}</div>
 
-      <PartySummary onEdit={() => setCurrentStep(0)} />
+     
 
       <div className="main__actions">
         {currentStep !== 0 && (
