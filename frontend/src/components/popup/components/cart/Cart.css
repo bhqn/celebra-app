@@ -6,7 +6,7 @@
   background-color: #fff;
   width: 100%;
   box-sizing: border-box;
-  max-height: 600px; /* opcional, para todo o carrinho não ultrapassar a tela */
+  max-height: 500px; /* opcional, para todo o carrinho não ultrapassar a tela */
 }
 
 .cart__list {
@@ -21,6 +21,7 @@
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 15px;
+  
 }
 
 .cart__empty {
@@ -127,5 +128,11 @@
 
 .cart__checkout{
   margin-bottom: 30px;
+      font-size: 22px;
+    font-weight: 600;
+  
+    margin: 0 0 10px;
+    letter-spacing: -.02em;
+    line-height: 1.2;
 }
 
